@@ -11,12 +11,18 @@
   width: 100%;
 }
 
-.scrollableList {
+.resizingList {
   display: flex;
   flex-direction: column;
   gap: 10px;
   max-height: 560px;
   overflow-y: auto;
+  padding: 0;
+  & .resizingListItem {
+    display: flex;
+    align-items: center;
+    list-style: none;
+  }
 }
 
 // .ingredient {

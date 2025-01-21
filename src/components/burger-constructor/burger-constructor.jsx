@@ -14,22 +14,22 @@ const BurgerConstructor = () => {
   const totalPrice = ingredients.reduce((acc, item) => acc + item.price, 0);
 
   return (
-    <div className={`pl-4 pr-4 ${styles.burgerConstructor}`}>
-      <div className={`${styles.constructorElement}`}>
+    <section className={`pl-4 pr-4 ${styles.burgerConstructor}`}>
+      <article className={`ml-7 ${styles.constructorElement}`}>
         <ConstructorElement type="top" isLocked={true} text={`${topBun.name} (верх)`} price={topBun.price} thumbnail={topBun.image} />
-      </div>
-      <div className={`${styles.scrollableList} custom-scroll`}>
+      </article>
+      <ul className={`${styles.resizingList} custom-scroll`}>
         {[...sauces, ...mains].map((item) => (
-          <div key={item._id}>
-            <DragIcon type="primary" />
+          <li key={item._id} className={`${styles.resizingListItem}`}>
+            <DragIcon className="mr-2" type="primary" />
             <ConstructorElement text={item.name} price={item.price} thumbnail={item.image} />
-          </div>
+          </li>
         ))}
-      </div>
-      <div className={`${styles.constructorElement}`}>
+      </ul>
+      <article className={`ml-7 ${styles.constructorElement}`}>
         <ConstructorElement type="bottom" isLocked={true} text={`${bottomBun.name} (низ)`} price={bottomBun.price} thumbnail={bottomBun.image} />
-      </div>
-      <div className={`${styles.total} pt-10`}>
+      </article>
+      <footer className={`${styles.total} pt-10`}>
         <div className={`${styles.price} mr-10`}>
           <span className="text text_type_digits-medium">{totalPrice}</span>
           <CurrencyIcon type="primary" />
@@ -37,8 +37,8 @@ const BurgerConstructor = () => {
         <Button htmlType="button" type="primary" size="large">
           Нажми на меня
         </Button>
-      </div>
-    </div>
+      </footer>
+    </section>
   );
 };
 
