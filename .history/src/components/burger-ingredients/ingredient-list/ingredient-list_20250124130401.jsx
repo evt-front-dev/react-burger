@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import style from "./ingredient-list.module.scss";
 import {
   Counter,
@@ -16,7 +15,7 @@ function IngredientList({ ingredients }) {
             <span className="text text_type_digits-default">{item.price}</span>
             <CurrencyIcon className="ml-2" />
           </div>
-          <span className={`text text_type_main-default ${style.name}`}>
+          <span style={style.name} className="text text_type_main-default">
             {item.name}
           </span>
           <Counter count={1} size="default" extraClass="m-1" />
@@ -25,17 +24,5 @@ function IngredientList({ ingredients }) {
     </div>
   );
 }
-
-IngredientList.propTypes = {
-  ingredients: PropTypes.arrayOf(
-    PropTypes.shape({
-      _id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
-      image: PropTypes.string.isRequired,
-      price: PropTypes.number.isRequired,
-    })
-  ).isRequired,
-};
 
 export default IngredientList;

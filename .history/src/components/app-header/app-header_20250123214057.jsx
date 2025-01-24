@@ -18,15 +18,17 @@ const AppHeader = () => {
 
   return (
     <header className={styles.header}>
-      {menuItems.map((item) => (
-        <HeaderItem
-          key={item.id}
-          nameItem={item.name}
-          IconComponent={item.icon}
-          isActive={activeId === item.id}
-          onClick={() => setActiveId(item.id)}
-        />
-      ))}
+      <nav className={styles.nav}>
+        {menuItems.map((item) => (
+          <HeaderItem
+            key={item.id}
+            nameItem={item.name}
+            IconComponent={item.icon}
+            isActive={activeId === item.id}
+            onClick={() => setActiveId(item.id)}
+          />
+        ))}
+      </nav>
       <div className={styles.logo}>
         <Logo />
       </div>

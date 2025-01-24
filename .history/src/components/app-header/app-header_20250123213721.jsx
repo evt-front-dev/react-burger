@@ -9,7 +9,7 @@ import {
 import HeaderItem from "./header-item/header-item";
 
 const AppHeader = () => {
-  const [activeId, setActiveId] = useState("constructor");
+  const [activeId, setActiveId] = useState(1);
   const menuItems = [
     { id: "constructor", name: "Конструктор", icon: BurgerIcon },
     { id: "orders", name: "Лента заказов", icon: ListIcon },

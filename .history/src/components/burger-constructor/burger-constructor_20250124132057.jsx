@@ -10,7 +10,7 @@ import {
 import { ingredients } from "../../utils/data";
 
 const IngredientItem = ({ item }) => (
-  <li className={`${styles.resizingListItem}`}>
+  <li key={item._id} className={`${styles.resizingListItem}`}>
     <DragIcon className="mr-2" type="primary" />
     <ConstructorElement
       text={item.name}
@@ -78,18 +78,6 @@ const BurgerConstructor = () => {
       </footer>
     </section>
   );
-};
-
-BurgerConstructor.propTypes = {
-  ingredients: PropTypes.arrayOf(
-    PropTypes.shape({
-      _id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
-      image: PropTypes.string.isRequired,
-      price: PropTypes.number.isRequired,
-    })
-  ),
 };
 
 export default BurgerConstructor;

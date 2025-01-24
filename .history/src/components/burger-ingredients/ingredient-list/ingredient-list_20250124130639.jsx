@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import style from "./ingredient-list.module.scss";
 import {
   Counter,
@@ -25,17 +24,5 @@ function IngredientList({ ingredients }) {
     </div>
   );
 }
-
-IngredientList.propTypes = {
-  ingredients: PropTypes.arrayOf(
-    PropTypes.shape({
-      _id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
-      image: PropTypes.string.isRequired,
-      price: PropTypes.number.isRequired,
-    })
-  ).isRequired,
-};
 
 export default IngredientList;

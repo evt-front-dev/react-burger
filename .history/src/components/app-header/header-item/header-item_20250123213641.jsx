@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./header-item.module.scss";
 
 export default function HeaderItem({
+  id,
   nameItem,
   IconComponent,
   isActive,

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
 import style from "./burger-ingredients.module.scss";
 import IngredientList from "./ingredient-list/ingredient-list";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
@@ -46,17 +45,5 @@ function BurgerIngredients() {
     </main>
   );
 }
-
-BurgerIngredients.propTypes = {
-  ingredients: PropTypes.arrayOf(
-    PropTypes.shape({
-      _id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
-      image: PropTypes.string.isRequired,
-      price: PropTypes.number.isRequired,
-    })
-  ),
-};
 
 export default BurgerIngredients;

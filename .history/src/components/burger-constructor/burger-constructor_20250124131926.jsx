@@ -9,29 +9,20 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { ingredients } from "../../utils/data";
 
-const IngredientItem = ({ item }) => (
-  <li className={`${styles.resizingListItem}`}>
-    <DragIcon className="mr-2" type="primary" />
-    <ConstructorElement
-      text={item.name}
-      price={item.price}
-      thumbnail={item.image}
-    />
-  </li>
-);
-
-IngredientItem.propTypes = {
-  item: PropTypes.shape({
-    _id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
-    image: PropTypes.string.isRequired,
-  }).isRequired,
-};
-
 const BurgerConstructor = () => {
   const getIngredientsByType = (ingredients, type) =>
     ingredients.filter((item) => item.type === type);
+
+  const IngredientItem = ({ item }) => (
+    <li key={item._id} className={`${styles.resizingListItem}`}>
+      <DragIcon className="mr-2" type="primary" />
+      <ConstructorElement
+        text={item.name}
+        price={item.price}
+        thumbnail={item.image}
+      />
+    </li>
+  );
 
   const buns = getIngredientsByType(ingredients, "bun");
   const sauces = getIngredientsByType(ingredients, "sauce");
@@ -80,16 +71,13 @@ const BurgerConstructor = () => {
   );
 };
 
-BurgerConstructor.propTypes = {
-  ingredients: PropTypes.arrayOf(
-    PropTypes.shape({
-      _id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
-      image: PropTypes.string.isRequired,
-      price: PropTypes.number.isRequired,
-    })
-  ),
+IngredientItem.propTypes = {
+  item: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    price: PropTypes.number.isRequired,
+    image: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default BurgerConstructor;

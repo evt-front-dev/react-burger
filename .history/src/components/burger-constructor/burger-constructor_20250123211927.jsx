@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import styles from "./burger-constructor.module.scss";
 import {
   ConstructorElement,
@@ -9,33 +8,10 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { ingredients } from "../../utils/data";
 
-const IngredientItem = ({ item }) => (
-  <li className={`${styles.resizingListItem}`}>
-    <DragIcon className="mr-2" type="primary" />
-    <ConstructorElement
-      text={item.name}
-      price={item.price}
-      thumbnail={item.image}
-    />
-  </li>
-);
-
-IngredientItem.propTypes = {
-  item: PropTypes.shape({
-    _id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
-    image: PropTypes.string.isRequired,
-  }).isRequired,
-};
-
 const BurgerConstructor = () => {
-  const getIngredientsByType = (ingredients, type) =>
-    ingredients.filter((item) => item.type === type);
-
-  const buns = getIngredientsByType(ingredients, "bun");
-  const sauces = getIngredientsByType(ingredients, "sauce");
-  const mains = getIngredientsByType(ingredients, "main");
+  const buns = ingredients.filter((item) => item.type === "bun");
+  const sauces = ingredients.filter((item) => item.type === "sauce");
+  const mains = ingredients.filter((item) => item.type === "main");
 
   const topBun = buns[0];
   const bottomBun = buns[0];
@@ -55,7 +31,14 @@ const BurgerConstructor = () => {
       </article>
       <ul className={`${styles.resizingList} custom-scroll`}>
         {[...sauces, ...mains].map((item) => (
-          <IngredientItem key={item._id} item={item} />
+          <li key={item._id} className={`${styles.resizingListItem}`}>
+            <DragIcon className="mr-2" type="primary" />
+            <ConstructorElement
+              text={item.name}
+              price={item.price}
+              thumbnail={item.image}
+            />
+          </li>
         ))}
       </ul>
       <article className={`ml-7 ${styles.constructorElement}`}>
@@ -67,7 +50,7 @@ const BurgerConstructor = () => {
           thumbnail={bottomBun.image}
         />
       </article>
-      <footer className={`${styles.total} pt-10`}>
+      <footer className={`${styles.total} pt-10 pr-2`}>
         <div className={`${styles.price} mr-10`}>
           <span className="text text_type_digits-medium">{totalPrice}</span>
           <CurrencyIcon type="primary" />
@@ -78,18 +61,6 @@ const BurgerConstructor = () => {
       </footer>
     </section>
   );
-};
-
-BurgerConstructor.propTypes = {
-  ingredients: PropTypes.arrayOf(
-    PropTypes.shape({
-      _id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
-      image: PropTypes.string.isRequired,
-      price: PropTypes.number.isRequired,
-    })
-  ),
 };
 
 export default BurgerConstructor;

@@ -9,8 +9,11 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { ingredients } from "../../utils/data";
 
+const getIngredientsByType = (ingredients, type) =>
+  ingredients.filter((item) => item.type === type);
+
 const IngredientItem = ({ item }) => (
-  <li className={`${styles.resizingListItem}`}>
+  <li key={item._id} className={`${styles.resizingListItem}`}>
     <DragIcon className="mr-2" type="primary" />
     <ConstructorElement
       text={item.name}
@@ -30,9 +33,6 @@ IngredientItem.propTypes = {
 };
 
 const BurgerConstructor = () => {
-  const getIngredientsByType = (ingredients, type) =>
-    ingredients.filter((item) => item.type === type);
-
   const buns = getIngredientsByType(ingredients, "bun");
   const sauces = getIngredientsByType(ingredients, "sauce");
   const mains = getIngredientsByType(ingredients, "main");
@@ -78,18 +78,6 @@ const BurgerConstructor = () => {
       </footer>
     </section>
   );
-};
-
-BurgerConstructor.propTypes = {
-  ingredients: PropTypes.arrayOf(
-    PropTypes.shape({
-      _id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
-      image: PropTypes.string.isRequired,
-      price: PropTypes.number.isRequired,
-    })
-  ),
 };
 
 export default BurgerConstructor;
