@@ -1,35 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import styles from "./burger-constructor.module.scss";
 import {
   ConstructorElement,
-  DragIcon,
   CurrencyIcon,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { ingredients } from "../../utils/data";
+import IngredientItem from "./ingredient-item/ingredient-item";
 
-const IngredientItem = ({ item }) => (
-  <li className={`${styles.resizingListItem}`}>
-    <DragIcon className="mr-2" type="primary" />
-    <ConstructorElement
-      text={item.name}
-      price={item.price}
-      thumbnail={item.image}
-    />
-  </li>
-);
-
-IngredientItem.propTypes = {
-  item: PropTypes.shape({
-    _id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
-    image: PropTypes.string.isRequired,
-  }).isRequired,
-};
-
-const BurgerConstructor = () => {
+const BurgerConstructor = ({ ingredients, onOrderClick }) => {
   const getIngredientsByType = (ingredients, type) =>
     ingredients.filter((item) => item.type === type);
 
@@ -72,7 +51,12 @@ const BurgerConstructor = () => {
           <span className="text text_type_digits-medium">{totalPrice}</span>
           <CurrencyIcon type="primary" />
         </div>
-        <Button htmlType="button" type="primary" size="large">
+        <Button
+          htmlType="button"
+          type="primary"
+          size="large"
+          onClick={onOrderClick}
+        >
           Нажми на меня
         </Button>
       </footer>

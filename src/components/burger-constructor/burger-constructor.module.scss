@@ -6,11 +6,6 @@
   padding-top: 100px;
   width: calc(50% - 52px);
 }
-
-.constructorElenent {
-  width: 100%;
-}
-
 .resizingList {
   display: flex;
   flex-direction: column;
@@ -18,26 +13,16 @@
   max-height: 560px;
   overflow-y: auto;
   padding: 0;
-  & .resizingListItem {
-    display: flex;
-    align-items: center;
-    list-style: none;
-  }
 }
-
-// .ingredient {
-//   display: flex;
-//   align-items: center;
-//   gap: 10px;
-// }
-
+.constructorElenent {
+  width: 100%;
+}
 .total {
   display: flex;
   justify-content: flex-end;
   align-items: center;
   width: 100%;
 }
-
 .price {
   display: flex;
   align-items: center;

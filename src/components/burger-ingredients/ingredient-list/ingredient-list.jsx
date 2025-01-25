@@ -6,11 +6,15 @@ import {
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-function IngredientList({ ingredients }) {
+const IngredientList = ({ ingredients, onIngredientClick }) => {
   return (
     <div className={`pl-4 pr-4 pb-10 pt-6 ${style.group}`}>
       {ingredients.map((item) => (
-        <div className={style.block} key={item._id}>
+        <div
+          className={style.block}
+          key={item._id}
+          onClick={() => onIngredientClick(item)}
+        >
           <img className="mb-1" src={item.image} alt={item.name} />
           <div className={`mb-1 ${style.price}`}>
             <span className="text text_type_digits-default">{item.price}</span>
@@ -24,7 +28,7 @@ function IngredientList({ ingredients }) {
       ))}
     </div>
   );
-}
+};
 
 IngredientList.propTypes = {
   ingredients: PropTypes.arrayOf(

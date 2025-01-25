@@ -1,12 +1,7 @@
 import React from "react";
 import styles from "./header-item.module.scss";
 
-export default function HeaderItem({
-  nameItem,
-  IconComponent,
-  isActive,
-  onClick,
-}) {
+const HeaderItem = ({ nameItem, IconComponent, isActive, onClick }) => {
   return (
     <div className={styles.item} onClick={onClick}>
       <IconComponent type={isActive ? "primary" : "secondary"} />
@@ -19,4 +14,6 @@ export default function HeaderItem({
       </div>
     </div>
   );
-}
+};
+
+export default HeaderItem;
