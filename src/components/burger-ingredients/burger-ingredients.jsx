@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import style from "./burger-ingredients.module.scss";
 import IngredientList from "./ingredient-list/ingredient-list";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
+import { IngredientType } from "../../utils/types";
 
 const BurgerIngredients = ({ ingredients, onIngredientClick }) => {
   const [current, setCurrent] = useState("buns");
@@ -21,7 +22,7 @@ const BurgerIngredients = ({ ingredients, onIngredientClick }) => {
 
   return (
     <>
-      <main className={style.container}>
+      <section className={style.container}>
         <p className="text text_type_main-large pt-10 mb-5">Соберите бургер</p>
         <nav className={`mb-10 ${style.tabs}`}>
           {tabs.map((tab) => (
@@ -48,21 +49,13 @@ const BurgerIngredients = ({ ingredients, onIngredientClick }) => {
             </div>
           ))}
         </section>
-      </main>
+      </section>
     </>
   );
 };
 
 BurgerIngredients.propTypes = {
-  ingredients: PropTypes.arrayOf(
-    PropTypes.shape({
-      _id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
-      image: PropTypes.string.isRequired,
-      price: PropTypes.number.isRequired,
-    })
-  ),
+  ingredients: PropTypes.arrayOf(IngredientType).isRequired,
 };
 
 export default BurgerIngredients;

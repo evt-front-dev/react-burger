@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./App.css";
+import styles from "./App.module.css";
 import AppHeader from "../app-header/app-header";
 import BurgerIngredients from "../burger-ingredients/burger-ingredients";
 import BurgerConstructor from "../burger-constructor/burger-constructor";
@@ -53,13 +53,7 @@ function App() {
   return (
     <>
       <AppHeader />
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          height: "calc(100% - 96px)",
-        }}
-      >
+      <main className={styles.pageContainer}>
         {loading ? (
           <div>Загрузка...</div>
         ) : error ? (
@@ -76,7 +70,7 @@ function App() {
             />
           </>
         )}
-      </div>
+      </main>
       {selectedIngredient && (
         <Modal title="Детали заказа" onClose={closeIngredientModal}>
           <IngredientDetails ingredient={selectedIngredient} />

@@ -5,6 +5,7 @@ import {
   Counter,
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
+import { IngredientType } from "../../../utils/types";
 
 const IngredientList = ({ ingredients, onIngredientClick }) => {
   return (
@@ -31,15 +32,7 @@ const IngredientList = ({ ingredients, onIngredientClick }) => {
 };
 
 IngredientList.propTypes = {
-  ingredients: PropTypes.arrayOf(
-    PropTypes.shape({
-      _id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
-      image: PropTypes.string.isRequired,
-      price: PropTypes.number.isRequired,
-    })
-  ).isRequired,
+  ingredients: PropTypes.arrayOf(IngredientType).isRequired,
 };
 
 export default IngredientList;
