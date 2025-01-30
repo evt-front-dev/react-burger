@@ -1,4 +1,3 @@
-// utils/types.js
 import PropTypes from "prop-types";
 
 export const IngredientType = PropTypes.shape({
