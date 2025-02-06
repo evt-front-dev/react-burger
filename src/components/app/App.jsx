@@ -7,12 +7,16 @@ import BurgerConstructor from "../burger-constructor/burger-constructor";
 import Modal from "../modal/modal";
 import IngredientDetails from "../ingredient-details/ingredient-details";
 import OrderDetails from "../order-details/order-details";
-import { fetchIngredients } from "../../services/ingredientsSlice";
+import {
+  fetchIngredients,
+  incrementIngredientCount,
+} from "../../services/ingredientsSlice";
 import { createOrder, closeOrderModal } from "../../services/orderSlice";
 import {
   setIngredientDetails,
   clearIngredientDetails,
 } from "../../services/ingredientDetailsSlice";
+import { addIngredient } from "../../services/constructorSlice";
 
 function App() {
   const dispatch = useDispatch();
@@ -35,6 +39,23 @@ function App() {
     dispatch(createOrder(ingredientIds));
   };
 
+  const handleIngredientClick = (ingredient) => {
+    if (!ingredient) return;
+
+    try {
+      const uniqueIngredient = {
+        ...ingredient,
+        uniqueId: `${ingredient._id}-${Date.now()}`,
+      };
+
+      dispatch(setIngredientDetails(ingredient));
+      dispatch(incrementIngredientCount(ingredient._id));
+      dispatch(addIngredient(uniqueIngredient));
+    } catch (error) {
+      console.error("Error adding ingredient:", error);
+    }
+  };
+
   return (
     <>
       <AppHeader />
@@ -47,20 +68,15 @@ function App() {
           <>
             <BurgerIngredients
               ingredients={ingredients}
-              onIngredientClick={(ingredient) =>
-                dispatch(setIngredientDetails(ingredient))
-              }
+              onIngredientClick={handleIngredientClick}
             />
-            <BurgerConstructor
-              ingredients={ingredients}
-              onOrderClick={handleOrderClick}
-            />
+            <BurgerConstructor onOrderClick={handleOrderClick} />
           </>
         )}
       </main>
       {currentIngredient && (
         <Modal
-          title="Детали заказа"
+          title="Детали ингредиента"
           onClose={() => dispatch(clearIngredientDetails())}
         >
           <IngredientDetails ingredient={currentIngredient} />

@@ -4,6 +4,12 @@ import constructorReducer from "../services/constructorSlice";
 import ingredientDetailsReducer from "../services/ingredientDetailsSlice";
 import orderReducer from "../services/orderSlice";
 
+const preloadedState = {
+  constructor: {
+    ingredients: [], // Предварительно загружаем пустой массив
+  },
+};
+
 const store = configureStore({
   reducer: {
     ingredients: ingredientsReducer,
@@ -11,11 +17,10 @@ const store = configureStore({
     ingredientDetails: ingredientDetailsReducer,
     order: orderReducer,
   },
+  preloadedState,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: {
-        ignoredPaths: ["constructor"],
-      },
+      serializableCheck: false, // Отключаем проверку сериализации для отладки
     }),
   devTools: process.env.NODE_ENV !== "production",
 });

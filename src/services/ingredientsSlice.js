@@ -10,7 +10,7 @@ export const fetchIngredients = createAsyncThunk(
       throw new Error("Ошибка при загрузке ингредиентов");
     }
     const data = await response.json();
-    return data.data;
+    return data.data.map((ingredient) => ({ ...ingredient, count: 0 }));
   }
 );
 
@@ -21,7 +21,23 @@ const ingredientsSlice = createSlice({
     loading: false,
     error: null,
   },
-  reducers: {},
+  reducers: {
+    incrementIngredientCount: (state, action) => {
+      const ingredient = state.list.find((item) => item._id === action.payload);
+      if (ingredient) {
+        if (ingredient.type === "bun") {
+          state.list.forEach((item) => {
+            if (item.type === "bun") {
+              item.count = 0;
+            }
+          });
+          ingredient.count = 2;
+        } else {
+          ingredient.count = (ingredient.count || 0) + 1;
+        }
+      }
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchIngredients.pending, (state) => {
@@ -38,5 +54,7 @@ const ingredientsSlice = createSlice({
       });
   },
 });
+
+export const { incrementIngredientCount } = ingredientsSlice.actions;
 
 export default ingredientsSlice.reducer;

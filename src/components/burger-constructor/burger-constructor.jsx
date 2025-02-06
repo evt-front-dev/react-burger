@@ -7,46 +7,50 @@ import {
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import IngredientItem from "./ingredient-item/ingredient-item";
+import { useSelector } from "react-redux";
+import { selectBuns, selectSaucesAndMains } from "../../services/selectors";
 
-const BurgerConstructor = ({ ingredients, onOrderClick }) => {
-  const getIngredientsByType = (ingredients, type) =>
-    ingredients.filter((item) => item.type === type);
+const BurgerConstructor = ({ onOrderClick }) => {
+  const buns = useSelector(selectBuns);
+  const saucesAndMains = useSelector(selectSaucesAndMains);
 
-  const buns = getIngredientsByType(ingredients, "bun");
-  const sauces = getIngredientsByType(ingredients, "sauce");
-  const mains = getIngredientsByType(ingredients, "main");
+  const bun = buns[0];
 
-  const topBun = buns[0];
-  const bottomBun = buns[0];
-
-  const totalPrice = ingredients.reduce((acc, item) => acc + item.price, 0);
+  const totalPrice = React.useMemo(() => {
+    const bunsPrice = bun ? bun.price * 2 : 0;
+    const ingredientsPrice = saucesAndMains.reduce(
+      (acc, item) => acc + item.price,
+      0
+    );
+    return bunsPrice + ingredientsPrice;
+  }, [bun, saucesAndMains]);
 
   return (
     <section className={`pl-4 pr-4 ${styles.burgerConstructor}`}>
-      {topBun && (
+      {bun && (
         <article className={`ml-7 ${styles.constructorElement}`}>
           <ConstructorElement
             type="top"
             isLocked={true}
-            text={`${topBun.name} (верх)`}
-            price={topBun.price}
-            thumbnail={topBun.image}
+            text={`${bun.name} (верх)`}
+            price={bun.price}
+            thumbnail={bun.image}
           />
         </article>
       )}
       <ul className={`${styles.resizingList} custom-scroll`}>
-        {[...sauces, ...mains].map((item) => (
-          <IngredientItem key={item._id} item={item} />
+        {saucesAndMains.map((item, index) => (
+          <IngredientItem key={`${item._id}-${index}`} item={item} />
         ))}
       </ul>
-      {bottomBun && (
+      {bun && (
         <article className={`ml-7 ${styles.constructorElement}`}>
           <ConstructorElement
             type="bottom"
             isLocked={true}
-            text={`${bottomBun.name} (низ)`}
-            price={bottomBun.price}
-            thumbnail={bottomBun.image}
+            text={`${bun.name} (низ)`}
+            price={bun.price}
+            thumbnail={bun.image}
           />
         </article>
       )}
@@ -61,7 +65,7 @@ const BurgerConstructor = ({ ingredients, onOrderClick }) => {
           size="large"
           onClick={onOrderClick}
         >
-          Нажми на меня
+          Оформить заказ
         </Button>
       </footer>
     </section>
@@ -69,15 +73,6 @@ const BurgerConstructor = ({ ingredients, onOrderClick }) => {
 };
 
 BurgerConstructor.propTypes = {
-  ingredients: PropTypes.arrayOf(
-    PropTypes.shape({
-      _id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
-      price: PropTypes.number.isRequired,
-      image: PropTypes.string.isRequired,
-    })
-  ).isRequired,
   onOrderClick: PropTypes.func.isRequired,
 };
 

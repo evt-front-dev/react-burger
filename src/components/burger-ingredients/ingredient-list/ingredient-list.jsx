@@ -24,7 +24,9 @@ const IngredientList = ({ ingredients, onIngredientClick }) => {
           <span className={`text text_type_main-default ${style.name}`}>
             {item.name}
           </span>
-          <Counter count={1} size="default" extraClass="m-1" />
+          {item.count > 0 && (
+            <Counter count={item.count} size="default" extraClass="m-1" />
+          )}
         </div>
       ))}
     </div>

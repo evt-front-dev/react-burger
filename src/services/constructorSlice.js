@@ -7,9 +7,26 @@ const constructorSlice = createSlice({
   },
   reducers: {
     addIngredient: (state, action) => {
-      state.ingredients.push(action.payload);
+      if (!state.ingredients) {
+        state.ingredients = [];
+      }
+
+      const ingredient = action.payload;
+
+      if (ingredient.type === "bun") {
+        state.ingredients = state.ingredients.filter(
+          (item) => item.type !== "bun"
+        );
+        state.ingredients.unshift(ingredient);
+      } else {
+        state.ingredients.push(ingredient);
+      }
     },
     removeIngredient: (state, action) => {
+      if (!state.ingredients) {
+        state.ingredients = [];
+        return;
+      }
       state.ingredients = state.ingredients.filter(
         (ingredient) => ingredient._id !== action.payload
       );

@@ -4,10 +4,14 @@ import style from "./burger-ingredients.module.scss";
 import IngredientList from "./ingredient-list/ingredient-list";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import { IngredientType } from "../../utils/types";
+import { useDispatch } from "react-redux";
+import { incrementIngredientCount } from "../../services/ingredientsSlice";
+import { addIngredient } from "../../services/constructorSlice";
 
 const BurgerIngredients = ({ ingredients, onIngredientClick }) => {
   const [current, setCurrent] = useState("buns");
   const containerRef = useRef(null);
+  const dispatch = useDispatch();
 
   const tabs = [
     { id: "buns", name: "Булки" },
@@ -41,6 +45,10 @@ const BurgerIngredients = ({ ingredients, onIngredientClick }) => {
     };
   }, []);
 
+  const handleIngredientClick = (ingredient) => {
+    onIngredientClick(ingredient);
+  };
+
   return (
     <>
       <section className={style.container}>
@@ -66,7 +74,7 @@ const BurgerIngredients = ({ ingredients, onIngredientClick }) => {
               <p className="text text_type_main-medium">{tab.name}</p>
               <IngredientList
                 ingredients={categoryIngredients[tab.id]}
-                onIngredientClick={onIngredientClick}
+                onIngredientClick={handleIngredientClick}
               />
             </div>
           ))}
