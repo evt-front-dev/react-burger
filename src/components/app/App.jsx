@@ -17,6 +17,8 @@ import {
   clearIngredientDetails,
 } from "../../services/ingredientDetailsSlice";
 import { addIngredient } from "../../services/constructorSlice";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 function App() {
   const dispatch = useDispatch();
@@ -41,19 +43,7 @@ function App() {
 
   const handleIngredientClick = (ingredient) => {
     if (!ingredient) return;
-
-    try {
-      const uniqueIngredient = {
-        ...ingredient,
-        uniqueId: `${ingredient._id}-${Date.now()}`,
-      };
-
-      dispatch(setIngredientDetails(ingredient));
-      dispatch(incrementIngredientCount(ingredient._id));
-      dispatch(addIngredient(uniqueIngredient));
-    } catch (error) {
-      console.error("Error adding ingredient:", error);
-    }
+    dispatch(setIngredientDetails(ingredient));
   };
 
   return (
@@ -65,13 +55,13 @@ function App() {
         ) : error ? (
           <div>Ошибка: {error}</div>
         ) : (
-          <>
+          <DndProvider backend={HTML5Backend}>
             <BurgerIngredients
               ingredients={ingredients}
               onIngredientClick={handleIngredientClick}
             />
             <BurgerConstructor onOrderClick={handleOrderClick} />
-          </>
+          </DndProvider>
         )}
       </main>
       {currentIngredient && (

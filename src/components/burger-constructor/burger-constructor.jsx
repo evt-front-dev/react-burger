@@ -7,9 +7,14 @@ import {
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import IngredientItem from "./ingredient-item/ingredient-item";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useDrop } from "react-dnd";
+import { DND_TYPES } from "../../utils/constants";
+import { addIngredient } from "../../services/constructorSlice";
+import { incrementIngredientCount } from "../../services/ingredientsSlice";
 
 const BurgerConstructor = ({ onOrderClick }) => {
+  const dispatch = useDispatch();
   const ingredients = useSelector(
     (state) => state.constructor.ingredients || []
   );
@@ -28,8 +33,41 @@ const BurgerConstructor = ({ onOrderClick }) => {
     return bunsPrice + ingredientsPrice;
   }, [bun, saucesAndMains]);
 
+  const [{ isHover, canDrop, itemType }, dropTarget] = useDrop({
+    accept: DND_TYPES.INGREDIENT,
+    drop(item) {
+      const uniqueIngredient = {
+        ...item,
+        uniqueId: `${item._id}-${Date.now()}`,
+      };
+      dispatch(addIngredient(uniqueIngredient));
+      dispatch(incrementIngredientCount(item._id));
+    },
+    collect: (monitor) => ({
+      isHover: monitor.isOver(),
+      canDrop: monitor.canDrop(),
+      itemType: monitor.getItem()?.type,
+    }),
+  });
+
+  // Определяем классы для разных зон
+  const topBunClass = `${styles.placeholder} ${styles.placeholderTop} ${
+    isHover && itemType === "bun" ? styles.placeholderHover : ""
+  }`;
+
+  const middleClass = `${styles.placeholder} ${styles.placeholderMiddle} ${
+    isHover && itemType !== "bun" ? styles.placeholderHover : ""
+  }`;
+
+  const bottomBunClass = `${styles.placeholder} ${styles.placeholderBottom} ${
+    isHover && itemType === "bun" ? styles.placeholderHover : ""
+  }`;
+
   return (
-    <section className={`pl-4 pr-4 ${styles.burgerConstructor}`}>
+    <section
+      ref={dropTarget}
+      className={`pl-4 pr-4 ${styles.burgerConstructor}`}
+    >
       <article className={`${styles.constructorElement}`}>
         {bun ? (
           <ConstructorElement
@@ -40,7 +78,7 @@ const BurgerConstructor = ({ onOrderClick }) => {
             thumbnail={bun.image}
           />
         ) : (
-          <div className={`${styles.placeholder} ${styles.placeholderTop}`}>
+          <div className={topBunClass}>
             <p className="text text_type_main-default text_color_inactive">
               Выберите булку
             </p>
@@ -56,7 +94,7 @@ const BurgerConstructor = ({ onOrderClick }) => {
         </ul>
       ) : (
         <article className={`${styles.constructorElement}`}>
-          <div className={`${styles.placeholder} ${styles.placeholderMiddle}`}>
+          <div className={middleClass}>
             <p className="text text_type_main-default text_color_inactive">
               Добавьте ингредиенты
             </p>
@@ -74,7 +112,7 @@ const BurgerConstructor = ({ onOrderClick }) => {
             thumbnail={bun.image}
           />
         ) : (
-          <div className={`${styles.placeholder} ${styles.placeholderBottom}`}>
+          <div className={bottomBunClass}>
             <p className="text text_type_main-default text_color_inactive">
               Выберите булку
             </p>
