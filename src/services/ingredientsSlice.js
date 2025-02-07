@@ -37,6 +37,16 @@ const ingredientsSlice = createSlice({
         }
       }
     },
+    decrementIngredientCount: (state, action) => {
+      const ingredient = state.list.find((item) => item._id === action.payload);
+      if (ingredient && ingredient.count > 0) {
+        if (ingredient.type === "bun") {
+          ingredient.count = 0;
+        } else {
+          ingredient.count -= 1;
+        }
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -55,6 +65,7 @@ const ingredientsSlice = createSlice({
   },
 });
 
-export const { incrementIngredientCount } = ingredientsSlice.actions;
+export const { incrementIngredientCount, decrementIngredientCount } =
+  ingredientsSlice.actions;
 
 export default ingredientsSlice.reducer;

@@ -7,29 +7,20 @@ const constructorSlice = createSlice({
   },
   reducers: {
     addIngredient: (state, action) => {
-      if (!state.ingredients) {
-        state.ingredients = [];
-      }
-
-      const ingredient = action.payload;
-
-      if (ingredient.type === "bun") {
+      if (action.payload.type === "bun") {
         state.ingredients = state.ingredients.filter(
           (item) => item.type !== "bun"
         );
-        state.ingredients.unshift(ingredient);
-      } else {
-        state.ingredients.push(ingredient);
       }
+      state.ingredients.push(action.payload);
     },
     removeIngredient: (state, action) => {
-      if (!state.ingredients) {
-        state.ingredients = [];
-        return;
-      }
-      state.ingredients = state.ingredients.filter(
-        (ingredient) => ingredient._id !== action.payload
+      const index = state.ingredients.findIndex(
+        (item) => item.uniqueId === action.payload
       );
+      if (index !== -1) {
+        state.ingredients.splice(index, 1);
+      }
     },
   },
 });
