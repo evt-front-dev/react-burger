@@ -53,8 +53,30 @@ const IngredientList = ({ ingredients, onIngredientClick }) => {
   );
 };
 
+IngredientItem.propTypes = {
+  item: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    type: PropTypes.oneOf(["bun", "sauce", "main"]).isRequired,
+    price: PropTypes.number.isRequired,
+    image: PropTypes.string.isRequired,
+    count: PropTypes.number.isRequired,
+  }).isRequired,
+  onIngredientClick: PropTypes.func.isRequired,
+};
+
 IngredientList.propTypes = {
-  ingredients: PropTypes.arrayOf(IngredientType).isRequired,
+  ingredients: PropTypes.arrayOf(
+    PropTypes.shape({
+      _id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(["bun", "sauce", "main"]).isRequired,
+      price: PropTypes.number.isRequired,
+      image: PropTypes.string.isRequired,
+      count: PropTypes.number.isRequired,
+    })
+  ).isRequired,
+  onIngredientClick: PropTypes.func.isRequired,
 };
 
 export default IngredientList;

@@ -2,5 +2,38 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  list-style: none;
+  cursor: grab;
+  transition: all 0.2s ease;
+  background: #1c1c21;
+  border-radius: 40px;
+  padding-left: 16px;
+  position: relative;
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  &:hover {
+    background: #2f2f37;
+  }
+}
+
+.dragging {
+  opacity: 0.5;
+  position: relative;
+  z-index: 1;
+  transform: scale(1.02);
+  box-shadow: 0 0 16px rgba(76, 76, 255, 0.2);
+}
+
+.placeholder {
+  height: 80px;
+  border: 2px dashed #4c4cff;
+  border-radius: 40px;
+  background: rgba(76, 76, 255, 0.1);
+}
+
+.hover {
+  background-color: rgba(76, 76, 255, 0.1);
+  border-radius: 40px;
 }

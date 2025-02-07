@@ -12,11 +12,14 @@ export const createOrder = createAsyncThunk(
       },
       body: JSON.stringify({ ingredients }),
     });
+
     if (!response.ok) {
-      throw new Error("Ошибка при создании заказа");
+      const error = await response.json();
+      throw new Error(error.message || "Ошибка при создании заказа");
     }
+
     const data = await response.json();
-    return data.order;
+    return data;
   }
 );
 
@@ -24,16 +27,15 @@ const orderSlice = createSlice({
   name: "order",
   initialState: {
     currentOrder: null,
+    isOrderModalOpen: false,
     loading: false,
     error: null,
-    isOrderModalOpen: false, // Добавлено для управления модальным окном
   },
   reducers: {
-    openOrderModal: (state) => {
-      state.isOrderModalOpen = true;
-    },
     closeOrderModal: (state) => {
       state.isOrderModalOpen = false;
+      state.currentOrder = null;
+      state.error = null;
     },
   },
   extraReducers: (builder) => {
@@ -41,11 +43,11 @@ const orderSlice = createSlice({
       .addCase(createOrder.pending, (state) => {
         state.loading = true;
         state.error = null;
+        state.isOrderModalOpen = true;
       })
       .addCase(createOrder.fulfilled, (state, action) => {
         state.loading = false;
         state.currentOrder = action.payload;
-        state.isOrderModalOpen = true;
       })
       .addCase(createOrder.rejected, (state, action) => {
         state.loading = false;
@@ -54,6 +56,5 @@ const orderSlice = createSlice({
   },
 });
 
-export const { openOrderModal, closeOrderModal } = orderSlice.actions;
-
+export const { closeOrderModal } = orderSlice.actions;
 export default orderSlice.reducer;
