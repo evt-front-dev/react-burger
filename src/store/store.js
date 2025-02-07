@@ -6,7 +6,7 @@ import orderReducer from "../services/orderSlice";
 
 const preloadedState = {
   constructor: {
-    ingredients: [], // Предварительно загружаем пустой массив
+    ingredients: [],
   },
 };
 

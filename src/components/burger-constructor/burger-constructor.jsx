@@ -8,11 +8,14 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import IngredientItem from "./ingredient-item/ingredient-item";
 import { useSelector } from "react-redux";
-import { selectBuns, selectSaucesAndMains } from "../../services/selectors";
 
 const BurgerConstructor = ({ onOrderClick }) => {
-  const buns = useSelector(selectBuns);
-  const saucesAndMains = useSelector(selectSaucesAndMains);
+  const ingredients = useSelector(
+    (state) => state.constructor.ingredients || []
+  );
+
+  const buns = ingredients.filter((item) => item?.type === "bun");
+  const saucesAndMains = ingredients.filter((item) => item?.type !== "bun");
 
   const bun = buns[0];
 
@@ -27,8 +30,8 @@ const BurgerConstructor = ({ onOrderClick }) => {
 
   return (
     <section className={`pl-4 pr-4 ${styles.burgerConstructor}`}>
-      {bun && (
-        <article className={`ml-7 ${styles.constructorElement}`}>
+      <article className={`${styles.constructorElement}`}>
+        {bun ? (
           <ConstructorElement
             type="top"
             isLocked={true}
@@ -36,15 +39,33 @@ const BurgerConstructor = ({ onOrderClick }) => {
             price={bun.price}
             thumbnail={bun.image}
           />
+        ) : (
+          <div className={`${styles.placeholder} ${styles.placeholderTop}`}>
+            <p className="text text_type_main-default text_color_inactive">
+              Выберите булку
+            </p>
+          </div>
+        )}
+      </article>
+
+      {saucesAndMains.length > 0 ? (
+        <ul className={`${styles.resizingList} custom-scroll`}>
+          {saucesAndMains.map((item, index) => (
+            <IngredientItem key={`${item._id}-${index}`} item={item} />
+          ))}
+        </ul>
+      ) : (
+        <article className={`${styles.constructorElement}`}>
+          <div className={`${styles.placeholder} ${styles.placeholderMiddle}`}>
+            <p className="text text_type_main-default text_color_inactive">
+              Добавьте ингредиенты
+            </p>
+          </div>
         </article>
       )}
-      <ul className={`${styles.resizingList} custom-scroll`}>
-        {saucesAndMains.map((item, index) => (
-          <IngredientItem key={`${item._id}-${index}`} item={item} />
-        ))}
-      </ul>
-      {bun && (
-        <article className={`ml-7 ${styles.constructorElement}`}>
+
+      <article className={`${styles.constructorElement}`}>
+        {bun ? (
           <ConstructorElement
             type="bottom"
             isLocked={true}
@@ -52,8 +73,15 @@ const BurgerConstructor = ({ onOrderClick }) => {
             price={bun.price}
             thumbnail={bun.image}
           />
-        </article>
-      )}
+        ) : (
+          <div className={`${styles.placeholder} ${styles.placeholderBottom}`}>
+            <p className="text text_type_main-default text_color_inactive">
+              Выберите булку
+            </p>
+          </div>
+        )}
+      </article>
+
       <footer className={`${styles.total} pt-10`}>
         <div className={`${styles.price} mr-10`}>
           <span className="text text_type_digits-medium">{totalPrice}</span>
@@ -64,6 +92,7 @@ const BurgerConstructor = ({ onOrderClick }) => {
           type="primary"
           size="large"
           onClick={onOrderClick}
+          disabled={!bun || saucesAndMains.length === 0}
         >
           Оформить заказ
         </Button>
