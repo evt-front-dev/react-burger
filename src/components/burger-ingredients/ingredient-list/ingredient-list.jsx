@@ -5,7 +5,6 @@ import {
   Counter,
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { IngredientType } from "../../../utils/types";
 import { useDrag } from "react-dnd";
 import { DND_TYPES } from "../../../utils/constants";
 

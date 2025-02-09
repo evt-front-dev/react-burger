@@ -25,7 +25,6 @@ const constructorSlice = createSlice({
     moveIngredient: (state, action) => {
       const { dragIndex, hoverIndex } = action.payload;
 
-      // Получаем только не-булочные ингредиенты
       const nonBunIngredients = state.ingredients.filter(
         (item) => item.type !== "bun"
       );
@@ -33,11 +32,8 @@ const constructorSlice = createSlice({
         (item) => item.type === "bun"
       );
 
-      // Перемещаем элемент
       const [draggedItem] = nonBunIngredients.splice(dragIndex, 1);
       nonBunIngredients.splice(hoverIndex, 0, draggedItem);
-
-      // Обновляем массив, сохраняя булки на своих местах
       state.ingredients = [...bunIngredients, ...nonBunIngredients];
     },
   },

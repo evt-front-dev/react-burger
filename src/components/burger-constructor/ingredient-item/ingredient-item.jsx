@@ -48,9 +48,7 @@ const IngredientItem = ({ item, index }) => {
       const clientOffset = monitor.getClientOffset();
       const hoverClientY = clientOffset.y - hoverBoundingRect.top;
 
-      // Двигаемся вверх
       if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) return;
-      // Двигаемся вниз
       if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) return;
 
       dispatch(moveIngredient({ dragIndex, hoverIndex }));

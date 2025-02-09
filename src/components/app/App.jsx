@@ -7,16 +7,12 @@ import BurgerConstructor from "../burger-constructor/burger-constructor";
 import Modal from "../modal/modal";
 import IngredientDetails from "../ingredient-details/ingredient-details";
 import OrderDetails from "../order-details/order-details";
-import {
-  fetchIngredients,
-  incrementIngredientCount,
-} from "../../services/ingredientsSlice";
+import { fetchIngredients } from "../../services/ingredientsSlice";
 import { createOrder, closeOrderModal } from "../../services/orderSlice";
 import {
   setIngredientDetails,
   clearIngredientDetails,
 } from "../../services/ingredientDetailsSlice";
-import { addIngredient } from "../../services/constructorSlice";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 

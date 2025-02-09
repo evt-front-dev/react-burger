@@ -3,7 +3,6 @@ import React from "react";
 import styles from "./order-details.module.scss";
 import doneImage from "../../images/done.png";
 import { useSelector } from "react-redux";
-import { CheckMarkIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
 const OrderDetails = () => {
   const { currentOrder, error } = useSelector((state) => state.order);

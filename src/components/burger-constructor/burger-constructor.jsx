@@ -17,7 +17,6 @@ import { createOrder } from "../../services/orderSlice";
 const BurgerConstructor = () => {
   const dispatch = useDispatch();
   const ingredients = useSelector((state) => state.constructor.ingredients);
-  const { loading, error } = useSelector((state) => state.order);
 
   const buns = ingredients.filter((item) => item?.type === "bun");
   const saucesAndMains = ingredients.filter((item) => item?.type !== "bun");
@@ -50,7 +49,6 @@ const BurgerConstructor = () => {
     }),
   });
 
-  // Определяем классы для разных зон
   const topBunClass = `${styles.placeholder} ${styles.placeholderTop} ${
     isHover && itemType === "bun" ? styles.placeholderHover : ""
   }`;
@@ -64,7 +62,6 @@ const BurgerConstructor = () => {
   }`;
 
   const handleOrderClick = () => {
-    // Проверяем наличие всех необходимых ингредиентов
     const bun = ingredients.find((item) => item.type === "bun");
     if (!bun) {
       alert("Пожалуйста, добавьте булку для создания заказа");
@@ -76,10 +73,8 @@ const BurgerConstructor = () => {
       return;
     }
 
-    // Собираем массив ID ингредиентов
     const ingredientIds = ingredients.map((item) => item._id);
 
-    // Отправляем заказ
     dispatch(createOrder(ingredientIds));
   };
 
@@ -155,22 +150,6 @@ const BurgerConstructor = () => {
           Оформить заказ
         </Button>
       </footer>
-
-      {/* <div className={styles.orderSection}>
-        <div className={styles.total}>
-          <p className="text text_type_digits-medium">{totalPrice}</p>
-          <CurrencyIcon type="primary" />
-        </div>
-        <Button
-          htmlType="button"
-          type="primary"
-          size="large"
-          onClick={handleOrderClick}
-          disabled={loading}
-        >
-          {loading ? "Оформляем заказ..." : "Оформить заказ"}
-        </Button>
-      </div> */}
     </section>
   );
 };

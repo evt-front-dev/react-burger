@@ -20,7 +20,7 @@ const store = configureStore({
   preloadedState,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: false, // Отключаем проверку сериализации для отладки
+      serializableCheck: false,
     }),
   devTools: process.env.NODE_ENV !== "production",
 });

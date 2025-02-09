@@ -5,8 +5,6 @@ import IngredientList from "./ingredient-list/ingredient-list";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import { IngredientType } from "../../utils/types";
 import { useDispatch } from "react-redux";
-import { incrementIngredientCount } from "../../services/ingredientsSlice";
-import { addIngredient } from "../../services/constructorSlice";
 
 const BurgerIngredients = ({ ingredients, onIngredientClick }) => {
   const [current, setCurrent] = useState("buns");
