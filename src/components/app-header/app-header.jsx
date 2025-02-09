@@ -14,7 +14,6 @@ const AppHeader = () => {
     { id: "constructor", name: "Конструктор", icon: BurgerIcon },
     { id: "orders", name: "Лента заказов", icon: ListIcon },
     { id: "profile", name: "Личный кабинет", icon: ProfileIcon },
-    { id: "card", name: "Карта", icon: ProfileIcon },
   ];
 
   return (

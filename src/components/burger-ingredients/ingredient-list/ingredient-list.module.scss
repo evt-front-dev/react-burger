@@ -11,6 +11,11 @@
   width: calc(50% - 12px);
   box-sizing: border-box;
   position: relative;
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
 }
 .price {
   display: flex;
@@ -18,4 +23,7 @@
 }
 .name {
   height: 48px;
+}
+.dragging {
+  opacity: 0.5;
 }
