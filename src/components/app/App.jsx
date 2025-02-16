@@ -1,28 +1,32 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
 import styles from "./App.module.css";
 import AppHeader from "../app-header/app-header";
-import BurgerIngredients from "../burger-ingredients/burger-ingredients";
-import BurgerConstructor from "../burger-constructor/burger-constructor";
 import Modal from "../modal/modal";
 import IngredientDetails from "../ingredient-details/ingredient-details";
 import OrderDetails from "../order-details/order-details";
 import { fetchIngredients } from "../../services/ingredientsSlice";
-import { createOrder, closeOrderModal } from "../../services/orderSlice";
-import {
-  setIngredientDetails,
-  clearIngredientDetails,
-} from "../../services/ingredientDetailsSlice";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+import { clearIngredientDetails } from "../../services/ingredientDetailsSlice";
+import { closeOrderModal } from "../../services/orderSlice";
+
+// Импорт страниц
+import HomePage from "../../pages/home/home";
+import LoginPage from "../../pages/login/login";
+import RegisterPage from "../../pages/register/register";
+import ForgotPasswordPage from "../../pages/forgot-password/forgot-password";
+import ResetPasswordPage from "../../pages/reset-password/reset-password";
+import ProfilePage from "../../pages/profile/profile";
+import IngredientPage from "../../pages/ingredient/ingredient";
 
 function App() {
   const dispatch = useDispatch();
-  const {
-    list: ingredients,
-    loading,
-    error,
-  } = useSelector((state) => state.ingredients);
   const { currentIngredient } = useSelector((state) => state.ingredientDetails);
   const { currentOrder, isOrderModalOpen } = useSelector(
     (state) => state.order
@@ -32,48 +36,41 @@ function App() {
     dispatch(fetchIngredients());
   }, [dispatch]);
 
-  const handleOrderClick = () => {
-    const ingredientIds = ingredients.map((ingredient) => ingredient._id);
-    dispatch(createOrder(ingredientIds));
-  };
-
-  const handleIngredientClick = (ingredient) => {
-    if (!ingredient) return;
-    dispatch(setIngredientDetails(ingredient));
-  };
-
   return (
-    <>
-      <AppHeader />
-      <main className={styles.pageContainer}>
-        {loading ? (
-          <div>Загрузка...</div>
-        ) : error ? (
-          <div>Ошибка: {error}</div>
-        ) : (
-          <DndProvider backend={HTML5Backend}>
-            <BurgerIngredients
-              ingredients={ingredients}
-              onIngredientClick={handleIngredientClick}
-            />
-            <BurgerConstructor onOrderClick={handleOrderClick} />
-          </DndProvider>
+    <Router
+      future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true,
+      }}
+    >
+      <div className={styles.app}>
+        <AppHeader />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/ingredients/:id" element={<IngredientPage />} />
+        </Routes>
+
+        {/* Модальные окна */}
+        {currentIngredient && (
+          <Modal
+            title="Детали ингредиента"
+            onClose={() => dispatch(clearIngredientDetails())}
+          >
+            <IngredientDetails ingredient={currentIngredient} />
+          </Modal>
         )}
-      </main>
-      {currentIngredient && (
-        <Modal
-          title="Детали ингредиента"
-          onClose={() => dispatch(clearIngredientDetails())}
-        >
-          <IngredientDetails ingredient={currentIngredient} />
-        </Modal>
-      )}
-      {isOrderModalOpen && (
-        <Modal onClose={() => dispatch(closeOrderModal())}>
-          <OrderDetails order={currentOrder} />
-        </Modal>
-      )}
-    </>
+        {isOrderModalOpen && (
+          <Modal onClose={() => dispatch(closeOrderModal())}>
+            <OrderDetails order={currentOrder} />
+          </Modal>
+        )}
+      </div>
+    </Router>
   );
 }
 
