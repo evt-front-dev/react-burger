@@ -1,66 +1,157 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect } from "react";
+import { NavLink, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import {
   EmailInput,
   PasswordInput,
   Input,
+  Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
+import { updateUser, logout } from "../../services/auth/authSlice";
 import styles from "./profile.module.scss";
 
 const Profile = () => {
-  const [name, setName] = React.useState("Марк");
-  const [email, setEmail] = React.useState("mail@stellar.burgers");
-  const [password, setPassword] = React.useState("******");
-  const inputRef = useRef(null);
+  const dispatch = useDispatch();
+  const { user, loading, error } = useSelector((state) => state.auth);
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+  const [isModified, setIsModified] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      setForm({
+        name: user.name,
+        email: user.email,
+        password: "",
+      });
+    }
+  }, [user]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    setIsModified(true);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const updateData = {};
+
+    if (form.name !== user.name) updateData.name = form.name;
+    if (form.email !== user.email) updateData.email = form.email;
+    if (form.password) updateData.password = form.password;
+
+    if (Object.keys(updateData).length > 0) {
+      await dispatch(updateUser(updateData));
+      setIsModified(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setForm({
+      name: user.name,
+      email: user.email,
+      password: "",
+    });
+    setIsModified(false);
+  };
+
+  const handleLogout = () => {
+    dispatch(logout());
+  };
 
   return (
     <div className={styles.container}>
-      <nav className={styles.nav}>
+      <nav className={`text text_type_main-medium ${styles.nav}`}>
         <ul>
-          <li className={styles.active}>Профиль</li>
-          <li>История заказов</li>
-          <li>Выход</li>
+          <li>
+            <NavLink
+              to="/profile"
+              className={({ isActive }) =>
+                isActive ? styles.active : undefined
+              }
+              end
+            >
+              Профиль
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/profile/orders"
+              className={({ isActive }) =>
+                isActive ? styles.active : undefined
+              }
+            >
+              История заказов
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="#" className={styles.link}>
+              Выход
+            </NavLink>
+          </li>
         </ul>
+        <p className={`text text_type_main-default ${styles.hint}`}>
+          В этом разделе вы можете изменить свои персональные данные
+        </p>
       </nav>
 
       <div className={styles.content}>
-        <div className={styles.input}>
+        <form onSubmit={handleSubmit} className={styles.form}>
           <Input
-            type={"text"}
-            placeholder={"Имя"}
-            onChange={(e) => setName(e.target.value)}
-            icon={"EditIcon"}
-            value={name}
-            name={"name"}
-            ref={inputRef}
-            required
+            type="text"
+            placeholder="Имя"
+            name="name"
+            value={form.name}
+            onChange={handleChange}
+            icon="EditIcon"
           />
-        </div>
-
-        <div className={styles.input}>
           <EmailInput
-            onChange={(e) => setEmail(e.target.value)}
-            value={email}
-            name={"email"}
-            placeholder={"Логин"}
+            placeholder="E-mail"
+            name="email"
+            value={form.email}
+            onChange={handleChange}
             isIcon={true}
-            required
           />
-        </div>
-
-        <div className={styles.input}>
           <PasswordInput
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder={"Пароль"}
-            value={password}
-            name={"password"}
-            icon={"EditIcon"}
-            required
+            placeholder="Пароль"
+            name="password"
+            value={form.password}
+            onChange={handleChange}
+            icon="EditIcon"
           />
-        </div>
-
-        <p className={styles.hint}>
-          В этом разделе вы можете изменить свои персональные данные
-        </p>
+          {error && (
+            <p className="text text_type_main-default text_color_error">
+              {error}
+            </p>
+          )}
+          {isModified && (
+            <div className={styles.buttons}>
+              <Button
+                type="secondary"
+                size="medium"
+                onClick={handleCancel}
+                htmlType="button"
+              >
+                Отмена
+              </Button>
+              <Button
+                type="primary"
+                size="medium"
+                htmlType="submit"
+                disabled={loading}
+              >
+                {loading ? "Сохранение..." : "Сохранить"}
+              </Button>
+            </div>
+          )}
+        </form>
       </div>
     </div>
   );
