@@ -62,8 +62,12 @@ const Profile = () => {
     setIsModified(false);
   };
 
-  const handleLogout = () => {
-    dispatch(logout());
+  const handleLogout = async () => {
+    try {
+      await dispatch(logout()).unwrap();
+    } catch (err) {
+      console.error("Ошибка при выходе:", err);
+    }
   };
 
   return (
@@ -92,9 +96,12 @@ const Profile = () => {
             </NavLink>
           </li>
           <li>
-            <NavLink to="#" className={styles.link}>
+            <button
+              className={`${styles.link} text text_type_main-medium`}
+              onClick={handleLogout}
+            >
               Выход
-            </NavLink>
+            </button>
           </li>
         </ul>
         <p className={`text text_type_main-default ${styles.hint}`}>

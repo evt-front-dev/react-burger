@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../../common/form.module.scss";
 import {
@@ -11,6 +11,10 @@ const ForgotPasswordPage = () => {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    sessionStorage.setItem("forgotPasswordVisited", "true");
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -23,6 +23,13 @@ const ResetPasswordPage = () => {
     }
   }, [navigate]);
 
+  useEffect(() => {
+    // Очищаем флаг после успешного сброса пароля
+    return () => {
+      sessionStorage.removeItem("forgotPasswordVisited");
+    };
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);

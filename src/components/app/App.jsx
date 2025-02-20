@@ -18,18 +18,17 @@ import {
 import {
   ProtectedRoute,
   OnlyUnAuthRoute,
+  ResetPasswordRoute,
 } from "../protected-route/protected-route";
 import { getCookie, deleteCookie } from "../../utils/cookies";
 
-import HomePage from "../../pages/home/home";
 import LoginPage from "../../pages/login/login";
 import RegisterPage from "../../pages/register/register";
 import ForgotPasswordPage from "../../pages/forgot-password/forgot-password";
 import ResetPasswordPage from "../../pages/reset-password/reset-password";
 import ProfilePage from "../../pages/profile/profile";
-import IngredientPage from "../../pages/ingredient/ingredient";
-import OrdersHistory from "../../pages/profile/orders-history/orders-history";
-import ProfileOrderDetails from "../../pages/profile/order-details/order-details";
+import NotFound404 from "../../pages/not-found/not-found";
+import HomePage from "../../pages/home/home";
 
 function App() {
   const dispatch = useDispatch();
@@ -92,21 +91,13 @@ function App() {
         />
         <Route
           path="/reset-password"
-          element={<OnlyUnAuthRoute element={<ResetPasswordPage />} />}
+          element={<ResetPasswordRoute element={<ResetPasswordPage />} />}
         />
         <Route
           path="/profile"
           element={<ProtectedRoute element={<ProfilePage />} />}
         />
-        <Route
-          path="/profile/orders"
-          element={<ProtectedRoute element={<OrdersHistory />} />}
-        />
-        <Route
-          path="/profile/orders/:number"
-          element={<ProtectedRoute element={<ProfileOrderDetails />} />}
-        />
-        <Route path="/ingredients/:id" element={<IngredientPage />} />
+        <Route path="*" element={<NotFound404 />} />
       </Routes>
 
       {currentIngredient && (

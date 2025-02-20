@@ -100,7 +100,9 @@ export const logout = createAsyncThunk(
   "auth/logout",
   async (_, { rejectWithValue }) => {
     try {
-      const data = await api.logout();
+      const refreshToken = getCookie("refreshToken");
+      const data = await api.logout(refreshToken);
+
       if (data.success) {
         deleteCookie("token");
         deleteCookie("refreshToken");
@@ -216,11 +218,10 @@ const authSlice = createSlice({
         state.user = null;
         state.loading = false;
         state.error = null;
-        state.isAuthChecked = true;
       })
       .addCase(logout.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
       });
 
     // Refresh Token
