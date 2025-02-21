@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import styles from "./burger-constructor.module.scss";
 import {
@@ -10,13 +10,36 @@ import IngredientItem from "./ingredient-item/ingredient-item";
 import { useSelector, useDispatch } from "react-redux";
 import { useDrop } from "react-dnd";
 import { DND_TYPES } from "../../utils/constants";
-import { addIngredient } from "../../services/constructorSlice";
-import { incrementIngredientCount } from "../../services/ingredientsSlice";
+import {
+  addIngredient,
+  setConstructorIngredients,
+  resetConstructor,
+} from "../../services/constructorSlice";
+import {
+  incrementIngredientCount,
+  resetIngredientCounts,
+} from "../../services/ingredientsSlice";
 import { createOrder } from "../../services/orderSlice";
+import { getCookie } from "../../utils/cookies";
+import { useNavigate } from "react-router-dom";
 
 const BurgerConstructor = () => {
   const dispatch = useDispatch();
   const ingredients = useSelector((state) => state.constructor.ingredients);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const savedIngredients = JSON.parse(
+      localStorage.getItem("constructorIngredients")
+    );
+    if (savedIngredients) {
+      dispatch(setConstructorIngredients(savedIngredients));
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    localStorage.setItem("constructorIngredients", JSON.stringify(ingredients));
+  }, [ingredients]);
 
   const buns = ingredients.filter((item) => item?.type === "bun");
   const saucesAndMains = ingredients.filter((item) => item?.type !== "bun");
@@ -61,7 +84,13 @@ const BurgerConstructor = () => {
     isHover && itemType === "bun" ? styles.placeholderHover : ""
   }`;
 
-  const handleOrderClick = () => {
+  const handleOrderClick = async () => {
+    const accessToken = getCookie("token");
+    if (!accessToken) {
+      navigate("/login");
+      return;
+    }
+
     const bun = ingredients.find((item) => item.type === "bun");
     if (!bun) {
       alert("Пожалуйста, добавьте булку для создания заказа");
@@ -74,8 +103,14 @@ const BurgerConstructor = () => {
     }
 
     const ingredientIds = ingredients.map((item) => item._id);
-
-    dispatch(createOrder(ingredientIds));
+    try {
+      await dispatch(createOrder(ingredientIds)).unwrap();
+      dispatch(resetConstructor());
+      dispatch(resetIngredientCounts());
+      localStorage.removeItem("constructorIngredients");
+    } catch (error) {
+      console.error("Ошибка при создании заказа:", error);
+    }
   };
 
   return (

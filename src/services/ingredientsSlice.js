@@ -47,6 +47,11 @@ const ingredientsSlice = createSlice({
         }
       }
     },
+    resetIngredientCounts: (state) => {
+      state.list.forEach((ingredient) => {
+        ingredient.count = 0;
+      });
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -65,7 +70,10 @@ const ingredientsSlice = createSlice({
   },
 });
 
-export const { incrementIngredientCount, decrementIngredientCount } =
-  ingredientsSlice.actions;
+export const {
+  incrementIngredientCount,
+  decrementIngredientCount,
+  resetIngredientCounts,
+} = ingredientsSlice.actions;
 
 export default ingredientsSlice.reducer;

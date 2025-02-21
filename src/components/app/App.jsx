@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import styles from "./App.module.css";
 import AppHeader from "../app-header/app-header";
 import Modal from "../modal/modal";
@@ -29,10 +29,13 @@ import ResetPasswordPage from "../../pages/reset-password/reset-password";
 import ProfilePage from "../../pages/profile/profile";
 import NotFound404 from "../../pages/not-found/not-found";
 import HomePage from "../../pages/home/home";
+import IngredientPage from "../../pages/ingredient/ingredient";
 
 function App() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const background = location.state?.background;
   const { currentIngredient } = useSelector((state) => state.ingredientDetails);
   const { currentOrder, isOrderModalOpen } = useSelector(
     (state) => state.order
@@ -72,11 +75,17 @@ function App() {
     checkAuth();
   }, [dispatch]);
 
+  const handleModalClose = () => {
+    dispatch(clearIngredientDetails());
+    navigate(-1);
+  };
+
   return (
-    <div className={styles.app}>
+    <>
       <AppHeader />
-      <Routes>
+      <Routes location={background || location}>
         <Route path="/" element={<HomePage />} />
+        <Route path="/ingredients/:id" element={<IngredientPage />} />
         <Route
           path="/login"
           element={<OnlyUnAuthRoute element={<LoginPage />} />}
@@ -100,20 +109,24 @@ function App() {
         <Route path="*" element={<NotFound404 />} />
       </Routes>
 
-      {currentIngredient && (
-        <Modal
-          title="Детали ингредиента"
-          onClose={() => dispatch(clearIngredientDetails())}
-        >
-          <IngredientDetails ingredient={currentIngredient} />
-        </Modal>
+      {background && (
+        <Routes>
+          <Route
+            path="/ingredients/:id"
+            element={
+              <Modal title="Детали ингредиента" onClose={handleModalClose}>
+                <IngredientDetails />
+              </Modal>
+            }
+          />
+        </Routes>
       )}
       {isOrderModalOpen && (
         <Modal onClose={() => dispatch(closeOrderModal())}>
           <OrderDetails order={currentOrder} />
         </Modal>
       )}
-    </div>
+    </>
   );
 }
 

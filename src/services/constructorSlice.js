@@ -36,10 +36,21 @@ const constructorSlice = createSlice({
       nonBunIngredients.splice(hoverIndex, 0, draggedItem);
       state.ingredients = [...bunIngredients, ...nonBunIngredients];
     },
+    setConstructorIngredients: (state, action) => {
+      state.ingredients = action.payload;
+    },
+    resetConstructor: (state) => {
+      state.ingredients = [];
+    },
   },
 });
 
-export const { addIngredient, removeIngredient, moveIngredient } =
-  constructorSlice.actions;
+export const {
+  addIngredient,
+  removeIngredient,
+  moveIngredient,
+  setConstructorIngredients,
+  resetConstructor,
+} = constructorSlice.actions;
 
 export default constructorSlice.reducer;

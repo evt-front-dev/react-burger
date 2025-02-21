@@ -87,6 +87,7 @@ export const login = createAsyncThunk(
       if (data.success) {
         setCookie("token", data.accessToken);
         setCookie("refreshToken", data.refreshToken);
+        localStorage.setItem("accessToken", data.accessToken);
         return data;
       }
       return rejectWithValue(data.message);
@@ -100,9 +101,7 @@ export const logout = createAsyncThunk(
   "auth/logout",
   async (_, { rejectWithValue }) => {
     try {
-      const refreshToken = getCookie("refreshToken");
-      const data = await api.logout(refreshToken);
-
+      const data = await api.logout();
       if (data.success) {
         deleteCookie("token");
         deleteCookie("refreshToken");
@@ -218,10 +217,11 @@ const authSlice = createSlice({
         state.user = null;
         state.loading = false;
         state.error = null;
+        state.isAuthChecked = true;
       })
       .addCase(logout.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       });
 
     // Refresh Token

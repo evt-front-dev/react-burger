@@ -30,7 +30,9 @@ const LoginPage = () => {
     try {
       await dispatch(login(form)).unwrap();
       navigate("/");
-    } catch (err) {}
+    } catch (err) {
+      console.error("Ошибка при входе:", err);
+    }
   };
 
   return (

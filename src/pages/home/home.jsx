@@ -7,9 +7,12 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { useSelector, useDispatch } from "react-redux";
 import { setIngredientDetails } from "../../services/ingredientDetailsSlice";
 import { createOrder } from "../../services/orderSlice";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const HomePage = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
+  const navigate = useNavigate();
   const {
     list: ingredients,
     loading,
@@ -19,6 +22,9 @@ const HomePage = () => {
   const handleIngredientClick = (ingredient) => {
     if (!ingredient) return;
     dispatch(setIngredientDetails(ingredient));
+    navigate(`/ingredients/${ingredient._id}`, {
+      state: { background: location },
+    });
   };
 
   const handleOrderClick = () => {

@@ -79,12 +79,14 @@ const RegisterPage = () => {
         )}
       </form>
       <div className={styles.links}>
-        <p className="text text_type_main-default text_color_inactive">
-          Уже зарегистрированы?{" "}
+        <div className={styles.link}>
+          <p className="text text_type_main-default text_color_inactive">
+            Уже зарегистрированы?
+          </p>
           <span className={styles.link} onClick={() => navigate("/login")}>
             Войти
           </span>
-        </p>
+        </div>
       </div>
     </div>
   );

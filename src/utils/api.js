@@ -115,6 +115,16 @@ class Api {
       body: JSON.stringify({ email, password }),
     });
   }
+
+  async register(email, password, name) {
+    return this.request("/auth/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password, name }),
+    });
+  }
 }
 
 export const api = new Api("https://norma.nomoreparties.space/api");
