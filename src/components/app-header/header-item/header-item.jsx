@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import styles from "./header-item.module.scss";
+import PropTypes from "prop-types";
 
 const HeaderItem = ({ nameItem, IconComponent, isActive, onClick }) => {
   const getPath = () => {
@@ -28,6 +29,13 @@ const HeaderItem = ({ nameItem, IconComponent, isActive, onClick }) => {
       </div>
     </NavLink>
   );
+};
+
+HeaderItem.propTypes = {
+  nameItem: PropTypes.string.isRequired,
+  IconComponent: PropTypes.elementType.isRequired,
+  isActive: PropTypes.bool.isRequired,
+  onClick: PropTypes.func.isRequired,
 };
 
 export default HeaderItem;

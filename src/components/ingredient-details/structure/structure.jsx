@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import style from "./structure.module.scss";
 
 function Structure({ label, value }) {
@@ -11,5 +12,10 @@ function Structure({ label, value }) {
     </div>
   );
 }
+
+Structure.propTypes = {
+  label: PropTypes.string.isRequired,
+  value: PropTypes.number.isRequired,
+};
 
 export default Structure;

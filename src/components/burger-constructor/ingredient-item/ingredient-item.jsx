@@ -83,12 +83,11 @@ const IngredientItem = ({ item, index }) => {
 
 IngredientItem.propTypes = {
   item: PropTypes.shape({
-    _id: PropTypes.string.isRequired,
     uniqueId: PropTypes.string.isRequired,
+    type: PropTypes.oneOf(["bun", "sauce", "main"]).isRequired,
     name: PropTypes.string.isRequired,
     price: PropTypes.number.isRequired,
     image: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(["bun", "sauce", "main"]).isRequired,
   }).isRequired,
   index: PropTypes.number.isRequired,
 };

@@ -14,7 +14,16 @@ const AppHeader = () => {
   const [activeId, setActiveId] = useState("constructor");
 
   React.useEffect(() => {
-    if (location.pathname === "/") {
+    const inactiveRoutes = [
+      "/login",
+      "/register",
+      "/forgot-password",
+      "/reset-password",
+    ];
+
+    if (inactiveRoutes.includes(location.pathname)) {
+      setActiveId("");
+    } else if (location.pathname === "/") {
       setActiveId("constructor");
     } else if (location.pathname.startsWith("/profile")) {
       setActiveId("profile");
