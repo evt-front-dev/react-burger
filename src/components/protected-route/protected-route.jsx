@@ -20,10 +20,6 @@ export const ProtectedRoute = ({ element }) => {
   return element;
 };
 
-ProtectedRoute.propTypes = {
-  element: PropTypes.element.isRequired,
-};
-
 export const OnlyUnAuthRoute = ({ element }) => {
   const { user, isAuthChecked } = useSelector((state) => state.auth);
   const location = useLocation();
@@ -38,10 +34,6 @@ export const OnlyUnAuthRoute = ({ element }) => {
   }
 
   return element;
-};
-
-OnlyUnAuthRoute.propTypes = {
-  element: PropTypes.element.isRequired,
 };
 
 export const ResetPasswordRoute = ({ element }) => {
