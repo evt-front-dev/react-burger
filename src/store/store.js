@@ -3,6 +3,7 @@ import ingredientsReducer from "../services/ingredientsSlice";
 import constructorReducer from "../services/constructorSlice";
 import ingredientDetailsReducer from "../services/ingredientDetailsSlice";
 import orderReducer from "../services/orderSlice";
+import authReducer from "../services/auth/authSlice";
 
 const preloadedState = {
   constructor: {
@@ -16,6 +17,7 @@ const store = configureStore({
     constructor: constructorReducer,
     ingredientDetails: ingredientDetailsReducer,
     order: orderReducer,
+    auth: authReducer,
   },
   preloadedState,
   middleware: (getDefaultMiddleware) =>

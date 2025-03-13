@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
 import styles from "./app-header.module.scss";
 import {
   Logo,
@@ -9,7 +10,28 @@ import {
 import HeaderItem from "./header-item/header-item";
 
 const AppHeader = () => {
+  const location = useLocation();
   const [activeId, setActiveId] = useState("constructor");
+
+  React.useEffect(() => {
+    const inactiveRoutes = [
+      "/login",
+      "/register",
+      "/forgot-password",
+      "/reset-password",
+    ];
+
+    if (inactiveRoutes.includes(location.pathname)) {
+      setActiveId("");
+    } else if (location.pathname === "/") {
+      setActiveId("constructor");
+    } else if (location.pathname.startsWith("/profile")) {
+      setActiveId("profile");
+    } else if (location.pathname === "/feed") {
+      setActiveId("orders");
+    }
+  }, [location]);
+
   const menuItems = [
     { id: "constructor", name: "Конструктор", icon: BurgerIcon },
     { id: "orders", name: "Лента заказов", icon: ListIcon },
