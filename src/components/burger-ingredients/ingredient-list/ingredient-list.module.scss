@@ -12,6 +12,7 @@
   box-sizing: border-box;
   position: relative;
   cursor: grab;
+  text-align: center;
 
   &:active {
     cursor: grabbing;
