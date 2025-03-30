@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import IngredientDetails from "components/ingredient-details/ingredient-details";
 import styles from "./ingredient.module.scss";
 import { Ingredient } from "services/ingredientsSlice";
-import { RootState } from "services/store";
+import { RootState } from "store/store";
 
 interface IngredientsState {
   list: Ingredient[];

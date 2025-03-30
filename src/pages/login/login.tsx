@@ -8,7 +8,7 @@ import {
   EmailInput,
   PasswordInput,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { AppDispatch, RootState } from "services/store";
+import { AppDispatch, RootState } from "store/store";
 
 interface LoginForm {
   email: string;

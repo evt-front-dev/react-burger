@@ -1,4 +1,4 @@
-import { getCookie } from "./cookies";
+import { getCookie, setCookie } from "./cookies";
 
 interface ApiResponse<T = any> {
   success: boolean;
@@ -83,9 +83,8 @@ class Api {
         ...options,
         headers,
       });
-      return await this.checkResponse<T>(res);
-    } catch (err: any) {
-      if (err.message === "jwt expired") {
+
+      if (res.status === 403) {
         try {
           const refreshData = await this.refreshToken();
           if (refreshData.success) {
@@ -93,7 +92,21 @@ class Api {
             return await this.request(endpoint, { ...options, headers });
           }
         } catch (refreshErr) {
-          throw refreshErr;
+          throw new Error("token expired");
+        }
+      }
+
+      return await this.checkResponse<T>(res);
+    } catch (err: any) {
+      if (err.message === "jwt expired" || err.message === "token expired") {
+        try {
+          const refreshData = await this.refreshToken();
+          if (refreshData.success) {
+            headers.set("authorization", refreshData.accessToken);
+            return await this.request(endpoint, { ...options, headers });
+          }
+        } catch (refreshErr) {
+          throw new Error("token expired");
         }
       }
       throw err;
@@ -102,13 +115,30 @@ class Api {
 
   async refreshToken(): Promise<AuthResponse> {
     const refreshToken = getCookie("refreshToken");
-    return this.request("/auth/token", {
+    if (!refreshToken) {
+      throw new Error("token expired");
+    }
+
+    const response = await fetch(`${this.baseUrl}/auth/token`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ token: refreshToken }),
     });
+
+    if (!response.ok) {
+      throw new Error("token expired");
+    }
+
+    const data = await response.json();
+    if (data.success) {
+      setCookie("token", data.accessToken);
+      setCookie("refreshToken", data.refreshToken);
+      return data;
+    }
+
+    throw new Error("token expired");
   }
 
   async logout(): Promise<ApiResponse> {

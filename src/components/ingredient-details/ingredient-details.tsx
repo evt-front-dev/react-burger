@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import style from "./ingredient-details.module.scss";
 import Structure from "./structure/structure";
 import { Ingredient } from "services/ingredientsSlice";
-import { RootState } from "services/store";
+import { RootState } from "store/store";
 
 interface IngredientDetailsProps {
   ingredient?: Ingredient;

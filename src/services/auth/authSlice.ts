@@ -56,14 +56,15 @@ export const getUser = createAsyncThunk<AuthResponse>(
       if (data.success) {
         return data;
       }
-      return rejectWithValue(null);
+      return rejectWithValue("Ошибка получения данных пользователя");
     } catch (err: any) {
       if (
         err.message === "jwt expired" ||
         err.message === "jwt malformed" ||
-        err.message === "jwt must be provided"
+        err.message === "jwt must be provided" ||
+        err.message === "token expired"
       ) {
-        return rejectWithValue(null);
+        return rejectWithValue("Необходима авторизация");
       }
       return rejectWithValue(err.message);
     }
@@ -93,15 +94,13 @@ export const refreshToken = createAsyncThunk<AuthResponse>(
   "auth/refreshToken",
   async (_, { rejectWithValue }) => {
     try {
-      const data = await api.refreshToken();
-      if (data.success) {
-        setCookie("token", data.accessToken);
-        setCookie("refreshToken", data.refreshToken);
-        return data;
-      }
-      return rejectWithValue(data.message);
-    } catch (err: any) {
-      return rejectWithValue(err.message);
+      const response = await api.refreshToken();
+      setCookie("token", response.accessToken);
+      setCookie("refreshToken", response.refreshToken);
+      return response;
+    } catch (error) {
+      console.error("Token refresh error:", error);
+      return rejectWithValue(error);
     }
   }
 );
@@ -130,20 +129,13 @@ export const login = createAsyncThunk<AuthResponse, LoginRequest>(
   "auth/login",
   async ({ email, password }, { rejectWithValue }) => {
     try {
-      const data = await api.login(email, password);
-      if (data.success) {
-        setCookie("token", data.accessToken);
-        setCookie("refreshToken", data.refreshToken);
-        localStorage.setItem("accessToken", data.accessToken);
-        return data;
-      }
-      return rejectWithValue("Неверный логин или пароль");
-    } catch (err: any) {
-      return rejectWithValue(
-        err.message === "email or password are incorrect"
-          ? "Неверный логин или пароль"
-          : "Произошла ошибка при входе"
-      );
+      const response = await api.login(email, password);
+      setCookie("token", response.accessToken);
+      setCookie("refreshToken", response.refreshToken);
+      return response;
+    } catch (error) {
+      console.error("Login error:", error);
+      return rejectWithValue(error);
     }
   }
 );
@@ -156,6 +148,7 @@ export const logout = createAsyncThunk<{ success: boolean; message?: string }>(
       if (data.success) {
         deleteCookie("token");
         deleteCookie("refreshToken");
+        localStorage.removeItem("accessToken");
         return data;
       }
       return rejectWithValue(data.message);
@@ -181,6 +174,7 @@ const authSlice = createSlice({
       state.isAuthChecked = true;
       state.loading = false;
       state.error = null;
+      state.accessToken = null;
     },
     clearError: (state) => {
       state.error = null;
@@ -205,12 +199,16 @@ const authSlice = createSlice({
         state.loading = false;
         state.user = action.payload.user;
         state.error = null;
+        state.isAuthChecked = true;
       })
       .addCase(getUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = null;
+        state.error = action.payload as string;
         state.user = null;
         state.isAuthChecked = true;
+        if (action.payload === "Необходима авторизация") {
+          state.accessToken = null;
+        }
       })
 
       .addCase(updateUser.pending, (state) => {

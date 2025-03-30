@@ -22,7 +22,7 @@ import { createOrder } from "services/orderSlice";
 import { getCookie } from "utils/cookies";
 import { useNavigate } from "react-router-dom";
 import { Ingredient } from "services/ingredientsSlice";
-import { AppDispatch, RootState } from "services/store";
+import { AppDispatch, RootState } from "store/store";
 
 export interface ConstructorIngredient extends Ingredient {
   uniqueId: string;
@@ -115,9 +115,22 @@ const BurgerConstructor: React.FC<BurgerConstructorProps> = ({
       return;
     }
 
-    const ingredientIds = ingredients.map((item) => item._id);
+    const ingredientIds = [];
+
+    saucesAndMains.forEach((item) => {
+      ingredientIds.push(item._id);
+    });
+
+    if (bun) {
+      ingredientIds.push(bun._id);
+      ingredientIds.push(bun._id);
+    }
+
     try {
+      onOrderClick();
+
       await dispatch(createOrder(ingredientIds)).unwrap();
+
       dispatch(resetConstructor());
       dispatch(resetIngredientCounts());
       localStorage.removeItem("constructorIngredients");

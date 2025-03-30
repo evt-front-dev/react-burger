@@ -3,7 +3,7 @@ import { Navigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { getCookie } from "utils/cookies";
 import Loader from "components/loader/loader";
-import { RootState } from "services/store";
+import { RootState } from "store/store";
 
 interface RouteProps {
   element: React.ReactElement;

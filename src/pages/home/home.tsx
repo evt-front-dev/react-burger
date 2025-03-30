@@ -9,7 +9,7 @@ import { setIngredientDetails } from "services/ingredientDetailsSlice";
 import { createOrder } from "services/orderSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Ingredient } from "services/ingredientsSlice";
-import { AppDispatch, RootState } from "services/store";
+import { AppDispatch, RootState } from "store/store";
 
 interface IngredientsState {
   list: Ingredient[];
@@ -36,8 +36,7 @@ const HomePage: React.FC = () => {
   };
 
   const handleOrderClick = () => {
-    const ingredientIds = ingredients.map((ingredient) => ingredient._id);
-    dispatch(createOrder(ingredientIds));
+    console.log("Нажали на создание заказа");
   };
 
   if (loading) return <div>Загрузка...</div>;

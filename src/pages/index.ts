@@ -6,3 +6,5 @@ export { default as ResetPasswordPage } from "./reset-password/reset-password";
 export { default as ProfilePage } from "./profile/profile";
 export { default as NotFound404 } from "./not-found/not-found";
 export { default as IngredientPage } from "./ingredient/ingredient";
+export { FeedPage } from "./feed/feed";
+export { OrderPage } from "./order/order";

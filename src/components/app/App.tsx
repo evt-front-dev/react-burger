@@ -14,6 +14,8 @@ import {
   ProfilePage,
   NotFound404,
   IngredientPage,
+  FeedPage,
+  OrderPage,
 } from "pages";
 import {
   ProtectedRoute,
@@ -23,7 +25,7 @@ import {
 import Modal from "components/modal/modal";
 import IngredientDetails from "components/ingredient-details/ingredient-details";
 import OrderDetails from "components/order-details/order-details";
-import { AppDispatch, RootState } from "services/store";
+import { AppDispatch, RootState } from "store/store";
 import { closeOrderModal } from "services/orderSlice";
 import { refreshToken } from "services/auth/authSlice";
 
@@ -95,6 +97,16 @@ const App: React.FC = () => {
           path="/profile"
           element={<ProtectedRoute element={<ProfilePage />} />}
         />
+        <Route
+          path="/profile/orders"
+          element={<ProtectedRoute element={<ProfilePage />} />}
+        />
+        <Route
+          path="/profile/orders/:id"
+          element={<ProtectedRoute element={<OrderPage />} />}
+        />
+        <Route path="/feed" element={<FeedPage />} />
+        <Route path="/feed/:id" element={<OrderPage />} />
         <Route path="/ingredients/:id" element={<IngredientPage />} />
         <Route path="*" element={<NotFound404 />} />
       </Routes>
@@ -109,11 +121,27 @@ const App: React.FC = () => {
               </Modal>
             }
           />
+          <Route
+            path="/feed/:id"
+            element={
+              <Modal title="" onClose={handleModalClose}>
+                <OrderPage isModal={true} />
+              </Modal>
+            }
+          />
+          <Route
+            path="/profile/orders/:id"
+            element={
+              <Modal title="" onClose={handleModalClose}>
+                <OrderPage isModal={true} />
+              </Modal>
+            }
+          />
         </Routes>
       )}
 
       {isOrderModalOpen && (
-        <Modal title="Заказ оформлен" onClose={handleOrderModalClose}>
+        <Modal onClose={handleOrderModalClose}>
           <OrderDetails />
         </Modal>
       )}
