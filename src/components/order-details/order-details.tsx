@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import styles from "./order-details.module.scss";
 import doneImage from "images/done.png";
-import { useSelector } from "react-redux";
 import { RootState } from "store/store";
+import { useAppSelector } from "hooks/redux";
 
 interface OrderState {
   currentOrder: {
@@ -15,7 +15,7 @@ interface OrderState {
 }
 
 const OrderDetails: React.FC = () => {
-  const { currentOrder, loading, error } = useSelector<RootState, OrderState>(
+  const { currentOrder, loading, error } = useAppSelector(
     (state) => state.order
   );
 

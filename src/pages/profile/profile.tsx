@@ -6,7 +6,6 @@ import React, {
   useRef,
 } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import {
   EmailInput,
   PasswordInput,
@@ -22,11 +21,12 @@ import {
 } from "services/ws/wsSlice";
 import { OrderList } from "components/order-list/order-list";
 import styles from "./profile.module.scss";
-import { AppDispatch, RootState } from "store/store";
+import { RootState } from "store/store";
 import { WS_URL } from "utils/constants";
 import { getCookie } from "utils/cookie";
 import { fetchIngredients, Ingredient } from "services/ingredientsSlice";
 import { IWSStoreState, IOrderIngredient } from "types/ws";
+import { useAppDispatch, useAppSelector } from "hooks/redux";
 
 interface ProfileForm {
   name: string;
@@ -71,18 +71,16 @@ type TIconTypes =
   | "EditIcon";
 
 const Profile: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const location = useLocation();
-  const { user, loading, error } = useSelector<RootState, AuthState>(
-    (state) => state.auth
-  );
+  const { user, loading, error } = useAppSelector((state) => state.auth);
   const { userOrders, wsConnected, feedType, orders, publicOrders } =
-    useSelector<RootState, IWSStoreState>((state) => state.ws);
+    useAppSelector((state) => state.ws);
   const {
     list: ingredients,
     loading: ingredientsLoading,
     error: ingredientsError,
-  } = useSelector<RootState, IngredientsState>((state) => state.ingredients);
+  } = useAppSelector((state) => state.ingredients);
 
   const ingredientsMap = ingredients.reduce<{
     [key: string]: IOrderIngredient;

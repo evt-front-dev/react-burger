@@ -1,12 +1,12 @@
 import React, { useEffect, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { OrderList } from "../../components/order-list/order-list";
 import { connect, disconnect, setFeedType } from "services/ws/wsSlice";
 import styles from "./feed.module.css";
 import { fetchIngredients, Ingredient } from "services/ingredientsSlice";
-import { AppDispatch, RootState } from "store/store";
+import { RootState } from "store/store";
 import { IWSStoreState, IOrderIngredient, IWSOrder } from "types/ws";
+import { useAppDispatch, useAppSelector } from "hooks/redux";
 
 interface IngredientsState {
   list: Ingredient[];
@@ -15,15 +15,15 @@ interface IngredientsState {
 }
 
 export const FeedPage = () => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const location = useLocation();
   const { publicOrders, orders, total, totalToday, wsConnected, feedType } =
-    useSelector<RootState, IWSStoreState>((state) => state.ws);
+    useAppSelector((state) => state.ws);
   const {
     list: ingredients,
     loading,
     error,
-  } = useSelector<RootState, IngredientsState>((state) => state.ingredients);
+  } = useAppSelector((state) => state.ingredients);
 
   const ingredientsMap = ingredients?.reduce<{
     [key: string]: IOrderIngredient;

@@ -1,9 +1,9 @@
 import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { getCookie } from "utils/cookies";
 import Loader from "components/loader/loader";
 import { RootState } from "store/store";
+import { useAppSelector } from "hooks/redux";
 
 interface RouteProps {
   element: React.ReactElement;
@@ -15,9 +15,7 @@ interface AuthState {
 }
 
 export const ProtectedRoute: React.FC<RouteProps> = ({ element }) => {
-  const { user, isAuthChecked } = useSelector<RootState, AuthState>(
-    (state) => state.auth
-  );
+  const { user, isAuthChecked } = useAppSelector((state) => state.auth);
   const location = useLocation();
   const token = getCookie("token");
 
@@ -33,9 +31,7 @@ export const ProtectedRoute: React.FC<RouteProps> = ({ element }) => {
 };
 
 export const OnlyUnAuthRoute: React.FC<RouteProps> = ({ element }) => {
-  const { user, isAuthChecked } = useSelector<RootState, AuthState>(
-    (state) => state.auth
-  );
+  const { user, isAuthChecked } = useAppSelector((state) => state.auth);
   const location = useLocation();
 
   if (!isAuthChecked) {
@@ -54,9 +50,7 @@ export const OnlyUnAuthRoute: React.FC<RouteProps> = ({ element }) => {
 
 export const ResetPasswordRoute: React.FC<RouteProps> = ({ element }) => {
   const location = useLocation();
-  const { user, isAuthChecked } = useSelector<RootState, AuthState>(
-    (state) => state.auth
-  );
+  const { user, isAuthChecked } = useAppSelector((state) => state.auth);
   const forgotPasswordVisited = sessionStorage.getItem("forgotPasswordVisited");
 
   if (!isAuthChecked) {

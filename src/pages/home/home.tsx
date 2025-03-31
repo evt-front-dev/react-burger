@@ -4,12 +4,12 @@ import BurgerIngredients from "components/burger-ingredients/burger-ingredients"
 import BurgerConstructor from "components/burger-constructor/burger-constructor";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { useSelector, useDispatch } from "react-redux";
 import { setIngredientDetails } from "services/ingredientDetailsSlice";
 import { createOrder } from "services/orderSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Ingredient } from "services/ingredientsSlice";
-import { AppDispatch, RootState } from "store/store";
+import { RootState } from "store/store";
+import { useAppDispatch, useAppSelector } from "hooks/redux";
 
 interface IngredientsState {
   list: Ingredient[];
@@ -18,14 +18,14 @@ interface IngredientsState {
 }
 
 const HomePage: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const location = useLocation();
   const navigate = useNavigate();
   const {
     list: ingredients,
     loading,
     error,
-  } = useSelector<RootState, IngredientsState>((state) => state.ingredients);
+  } = useAppSelector((state) => state.ingredients);
 
   const handleIngredientClick = (ingredient: Ingredient) => {
     if (!ingredient) return;

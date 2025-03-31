@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import AppHeader from "components/app-header/app-header";
 import { fetchIngredients } from "services/ingredientsSlice";
 import { getUser, setAuthChecked } from "services/auth/authSlice";
@@ -25,16 +24,17 @@ import {
 import Modal from "components/modal/modal";
 import IngredientDetails from "components/ingredient-details/ingredient-details";
 import OrderDetails from "components/order-details/order-details";
-import { AppDispatch, RootState } from "store/store";
+import { RootState } from "store/store";
 import { closeOrderModal } from "services/orderSlice";
 import { refreshToken } from "services/auth/authSlice";
+import { useAppDispatch, useAppSelector } from "hooks/redux";
 
 const App: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const location = useLocation();
   const navigate = useNavigate();
   const background = location.state?.background;
-  const { isOrderModalOpen } = useSelector((state: RootState) => state.order);
+  const { isOrderModalOpen } = useAppSelector((state) => state.order);
 
   useEffect(() => {
     dispatch(fetchIngredients());

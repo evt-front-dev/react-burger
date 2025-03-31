@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import { IOrder, IOrderIngredient } from "../../types/ws";
 import { formatDate } from "../../utils/date";
 import styles from "./order.module.css";
 import { fetchIngredients, Ingredient } from "services/ingredientsSlice";
-import { AppDispatch, RootState } from "store/store";
+import { RootState } from "store/store";
+import { useAppDispatch, useAppSelector } from "hooks/redux";
 
 interface IIngredientCount {
   ingredient: IOrderIngredient;
@@ -27,15 +27,13 @@ export const OrderPage: React.FC<OrderPageProps> = ({ isModal = false }) => {
   const { id } = useParams<{ id: string }>();
   const [order, setOrder] = useState<IOrder | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const {
     list: ingredients,
     loading: ingredientsLoading,
     error: ingredientsError,
-  } = useSelector<RootState, IngredientsState>((state) => state.ingredients);
-  const { publicOrders, userOrders } = useSelector(
-    (state: RootState) => state.ws
-  );
+  } = useAppSelector((state) => state.ingredients);
+  const { publicOrders, userOrders } = useAppSelector((state) => state.ws);
 
   useEffect(() => {
     if (!ingredients?.length) {

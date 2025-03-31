@@ -4,12 +4,12 @@ import {
   ConstructorElement,
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useDispatch } from "react-redux";
 import { removeIngredient, moveIngredient } from "services/constructorSlice";
 import { decrementIngredientCount } from "services/ingredientsSlice";
 import { useDrag, useDrop } from "react-dnd";
 import { DND_TYPES } from "utils/constants";
 import { ConstructorIngredient } from "../burger-constructor";
+import { useAppDispatch } from "hooks/redux";
 
 interface IngredientItemProps {
   item: ConstructorIngredient;
@@ -24,7 +24,7 @@ interface DragItem {
 }
 
 const IngredientItem: React.FC<IngredientItemProps> = ({ item, index }) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const ref = useRef<HTMLLIElement>(null);
 
   const [{ isDragging }, drag] = useDrag({

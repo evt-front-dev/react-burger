@@ -66,7 +66,11 @@ export const getUser = createAsyncThunk<AuthResponse>(
       ) {
         return rejectWithValue("Необходима авторизация");
       }
-      return rejectWithValue(err.message);
+      return rejectWithValue(
+        err instanceof Error
+          ? err.message
+          : "Ошибка получения данных пользователя"
+      );
     }
   }
 );
@@ -83,9 +87,15 @@ export const updateUser = createAsyncThunk<AuthResponse, UpdateUserRequest>(
       if (data.success) {
         return data;
       }
-      return rejectWithValue(data.message);
+      return rejectWithValue(
+        data.message || "Ошибка обновления данных пользователя"
+      );
     } catch (err: any) {
-      return rejectWithValue(err.message);
+      return rejectWithValue(
+        err instanceof Error
+          ? err.message
+          : "Ошибка обновления данных пользователя"
+      );
     }
   }
 );
@@ -98,9 +108,11 @@ export const refreshToken = createAsyncThunk<AuthResponse>(
       setCookie("token", response.accessToken);
       setCookie("refreshToken", response.refreshToken);
       return response;
-    } catch (error) {
+    } catch (error: any) {
       console.error("Token refresh error:", error);
-      return rejectWithValue(error);
+      return rejectWithValue(
+        error instanceof Error ? error.message : "Ошибка обновления токена"
+      );
     }
   }
 );
@@ -120,7 +132,9 @@ export const register = createAsyncThunk<AuthResponse, RegisterRequest>(
       if (err.message === "User already exists") {
         return rejectWithValue("Пользователь с таким email уже существует");
       }
-      return rejectWithValue(err.message || "Произошла ошибка при регистрации");
+      return rejectWithValue(
+        err instanceof Error ? err.message : "Произошла ошибка при регистрации"
+      );
     }
   }
 );
@@ -133,9 +147,11 @@ export const login = createAsyncThunk<AuthResponse, LoginRequest>(
       setCookie("token", response.accessToken);
       setCookie("refreshToken", response.refreshToken);
       return response;
-    } catch (error) {
+    } catch (error: any) {
       console.error("Login error:", error);
-      return rejectWithValue(error);
+      return rejectWithValue(
+        error instanceof Error ? error.message : "Неверный логин или пароль"
+      );
     }
   }
 );
@@ -151,9 +167,11 @@ export const logout = createAsyncThunk<{ success: boolean; message?: string }>(
         localStorage.removeItem("accessToken");
         return data;
       }
-      return rejectWithValue(data.message);
+      return rejectWithValue(data.message || "Ошибка при выходе из системы");
     } catch (err: any) {
-      return rejectWithValue(err.message);
+      return rejectWithValue(
+        err instanceof Error ? err.message : "Ошибка при выходе из системы"
+      );
     }
   }
 );
@@ -265,7 +283,10 @@ const authSlice = createSlice({
       })
       .addCase(logout.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || null;
+        state.error =
+          typeof action.payload === "string"
+            ? action.payload
+            : action.error.message || "Произошла ошибка при выходе из системы";
       })
 
       .addCase(refreshToken.fulfilled, (state, action) => {
@@ -282,7 +303,14 @@ const authSlice = createSlice({
           state.loading = false;
           if (action.type !== "auth/login/rejected") {
             state.error =
-              action.error?.message || "Произошла неизвестная ошибка";
+              typeof action.payload === "string"
+                ? action.payload
+                : action.error?.message || "Произошла неизвестная ошибка";
+          } else {
+            state.error =
+              typeof action.payload === "string"
+                ? action.payload
+                : "Неверный логин или пароль";
           }
           state.isAuthChecked = true;
 
