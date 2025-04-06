@@ -1,6 +1,5 @@
 import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import { register } from "services/auth/authSlice";
 import styles from "common/form.module.scss";
 import {
@@ -9,7 +8,8 @@ import {
   PasswordInput,
   Input,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { AppDispatch, RootState } from "services/store";
+import { RootState } from "store/store";
+import { useAppDispatch, useAppSelector } from "hooks/redux";
 
 interface RegisterForm {
   name: string;
@@ -25,10 +25,8 @@ interface AuthState {
 
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
-  const { loading, error, user } = useSelector<RootState, AuthState>(
-    (state) => state.auth
-  );
+  const dispatch = useAppDispatch();
+  const { loading, error, user } = useAppSelector((state) => state.auth);
 
   const [form, setForm] = useState<RegisterForm>({
     name: "",
@@ -51,7 +49,12 @@ const RegisterPage: React.FC = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (isFormValid) {
-      dispatch(register(form));
+      try {
+        await dispatch(register(form)).unwrap();
+        navigate("/");
+      } catch (err: any) {
+        console.error("Registration failed:", err);
+      }
     }
   };
 

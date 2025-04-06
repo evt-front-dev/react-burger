@@ -6,7 +6,6 @@ import {
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import IngredientItem from "./ingredient-item/ingredient-item";
-import { useSelector, useDispatch } from "react-redux";
 import { useDrop } from "react-dnd";
 import { DND_TYPES } from "utils/constants";
 import {
@@ -22,7 +21,8 @@ import { createOrder } from "services/orderSlice";
 import { getCookie } from "utils/cookies";
 import { useNavigate } from "react-router-dom";
 import { Ingredient } from "services/ingredientsSlice";
-import { AppDispatch, RootState } from "services/store";
+import { RootState } from "store/store";
+import { useAppDispatch, useAppSelector } from "hooks/redux";
 
 export interface ConstructorIngredient extends Ingredient {
   uniqueId: string;
@@ -35,10 +35,8 @@ interface BurgerConstructorProps {
 const BurgerConstructor: React.FC<BurgerConstructorProps> = ({
   onOrderClick,
 }) => {
-  const dispatch = useDispatch<AppDispatch>();
-  const ingredients = useSelector<RootState, ConstructorIngredient[]>(
-    (state) => state.constructor.ingredients
-  );
+  const dispatch = useAppDispatch();
+  const ingredients = useAppSelector((state) => state.constructor.ingredients);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -115,9 +113,22 @@ const BurgerConstructor: React.FC<BurgerConstructorProps> = ({
       return;
     }
 
-    const ingredientIds = ingredients.map((item) => item._id);
+    const ingredientIds = [];
+
+    saucesAndMains.forEach((item) => {
+      ingredientIds.push(item._id);
+    });
+
+    if (bun) {
+      ingredientIds.push(bun._id);
+      ingredientIds.push(bun._id);
+    }
+
     try {
+      onOrderClick();
+
       await dispatch(createOrder(ingredientIds)).unwrap();
+
       dispatch(resetConstructor());
       dispatch(resetIngredientCounts());
       localStorage.removeItem("constructorIngredients");

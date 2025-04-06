@@ -3,7 +3,7 @@ import style from "./burger-ingredients.module.scss";
 import IngredientList from "./ingredient-list/ingredient-list";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import { Ingredient } from "services/ingredientsSlice";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "hooks/redux";
 
 interface BurgerIngredientsProps {
   ingredients: Ingredient[];
@@ -21,7 +21,7 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({
 }) => {
   const [current, setCurrent] = useState<"buns" | "sauces" | "main">("buns");
   const containerRef = useRef<HTMLElement>(null);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const tabs: TabItem[] = [
     { id: "buns", name: "Булки" },

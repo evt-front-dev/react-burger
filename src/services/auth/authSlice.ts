@@ -56,16 +56,21 @@ export const getUser = createAsyncThunk<AuthResponse>(
       if (data.success) {
         return data;
       }
-      return rejectWithValue(null);
+      return rejectWithValue("Ошибка получения данных пользователя");
     } catch (err: any) {
       if (
         err.message === "jwt expired" ||
         err.message === "jwt malformed" ||
-        err.message === "jwt must be provided"
+        err.message === "jwt must be provided" ||
+        err.message === "token expired"
       ) {
-        return rejectWithValue(null);
+        return rejectWithValue("Необходима авторизация");
       }
-      return rejectWithValue(err.message);
+      return rejectWithValue(
+        err instanceof Error
+          ? err.message
+          : "Ошибка получения данных пользователя"
+      );
     }
   }
 );
@@ -82,9 +87,15 @@ export const updateUser = createAsyncThunk<AuthResponse, UpdateUserRequest>(
       if (data.success) {
         return data;
       }
-      return rejectWithValue(data.message);
+      return rejectWithValue(
+        data.message || "Ошибка обновления данных пользователя"
+      );
     } catch (err: any) {
-      return rejectWithValue(err.message);
+      return rejectWithValue(
+        err instanceof Error
+          ? err.message
+          : "Ошибка обновления данных пользователя"
+      );
     }
   }
 );
@@ -93,15 +104,15 @@ export const refreshToken = createAsyncThunk<AuthResponse>(
   "auth/refreshToken",
   async (_, { rejectWithValue }) => {
     try {
-      const data = await api.refreshToken();
-      if (data.success) {
-        setCookie("token", data.accessToken);
-        setCookie("refreshToken", data.refreshToken);
-        return data;
-      }
-      return rejectWithValue(data.message);
-    } catch (err: any) {
-      return rejectWithValue(err.message);
+      const response = await api.refreshToken();
+      setCookie("token", response.accessToken);
+      setCookie("refreshToken", response.refreshToken);
+      return response;
+    } catch (error: any) {
+      console.error("Token refresh error:", error);
+      return rejectWithValue(
+        error instanceof Error ? error.message : "Ошибка обновления токена"
+      );
     }
   }
 );
@@ -121,7 +132,9 @@ export const register = createAsyncThunk<AuthResponse, RegisterRequest>(
       if (err.message === "User already exists") {
         return rejectWithValue("Пользователь с таким email уже существует");
       }
-      return rejectWithValue(err.message || "Произошла ошибка при регистрации");
+      return rejectWithValue(
+        err instanceof Error ? err.message : "Произошла ошибка при регистрации"
+      );
     }
   }
 );
@@ -130,19 +143,14 @@ export const login = createAsyncThunk<AuthResponse, LoginRequest>(
   "auth/login",
   async ({ email, password }, { rejectWithValue }) => {
     try {
-      const data = await api.login(email, password);
-      if (data.success) {
-        setCookie("token", data.accessToken);
-        setCookie("refreshToken", data.refreshToken);
-        localStorage.setItem("accessToken", data.accessToken);
-        return data;
-      }
-      return rejectWithValue("Неверный логин или пароль");
-    } catch (err: any) {
+      const response = await api.login(email, password);
+      setCookie("token", response.accessToken);
+      setCookie("refreshToken", response.refreshToken);
+      return response;
+    } catch (error: any) {
+      console.error("Login error:", error);
       return rejectWithValue(
-        err.message === "email or password are incorrect"
-          ? "Неверный логин или пароль"
-          : "Произошла ошибка при входе"
+        error instanceof Error ? error.message : "Неверный логин или пароль"
       );
     }
   }
@@ -156,11 +164,14 @@ export const logout = createAsyncThunk<{ success: boolean; message?: string }>(
       if (data.success) {
         deleteCookie("token");
         deleteCookie("refreshToken");
+        localStorage.removeItem("accessToken");
         return data;
       }
-      return rejectWithValue(data.message);
+      return rejectWithValue(data.message || "Ошибка при выходе из системы");
     } catch (err: any) {
-      return rejectWithValue(err.message);
+      return rejectWithValue(
+        err instanceof Error ? err.message : "Ошибка при выходе из системы"
+      );
     }
   }
 );
@@ -181,6 +192,7 @@ const authSlice = createSlice({
       state.isAuthChecked = true;
       state.loading = false;
       state.error = null;
+      state.accessToken = null;
     },
     clearError: (state) => {
       state.error = null;
@@ -205,12 +217,16 @@ const authSlice = createSlice({
         state.loading = false;
         state.user = action.payload.user;
         state.error = null;
+        state.isAuthChecked = true;
       })
       .addCase(getUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = null;
+        state.error = action.payload as string;
         state.user = null;
         state.isAuthChecked = true;
+        if (action.payload === "Необходима авторизация") {
+          state.accessToken = null;
+        }
       })
 
       .addCase(updateUser.pending, (state) => {
@@ -267,7 +283,10 @@ const authSlice = createSlice({
       })
       .addCase(logout.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || null;
+        state.error =
+          typeof action.payload === "string"
+            ? action.payload
+            : action.error.message || "Произошла ошибка при выходе из системы";
       })
 
       .addCase(refreshToken.fulfilled, (state, action) => {
@@ -284,7 +303,14 @@ const authSlice = createSlice({
           state.loading = false;
           if (action.type !== "auth/login/rejected") {
             state.error =
-              action.error?.message || "Произошла неизвестная ошибка";
+              typeof action.payload === "string"
+                ? action.payload
+                : action.error?.message || "Произошла неизвестная ошибка";
+          } else {
+            state.error =
+              typeof action.payload === "string"
+                ? action.payload
+                : "Неверный логин или пароль";
           }
           state.isAuthChecked = true;
 

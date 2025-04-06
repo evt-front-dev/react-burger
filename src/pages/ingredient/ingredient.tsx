@@ -1,10 +1,10 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
 import IngredientDetails from "components/ingredient-details/ingredient-details";
 import styles from "./ingredient.module.scss";
 import { Ingredient } from "services/ingredientsSlice";
-import { RootState } from "services/store";
+import { RootState } from "store/store";
+import { useAppSelector } from "hooks/redux";
 
 interface IngredientsState {
   list: Ingredient[];
@@ -12,9 +12,7 @@ interface IngredientsState {
 
 const IngredientPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { list: ingredients } = useSelector<RootState, IngredientsState>(
-    (state) => state.ingredients
-  );
+  const { list: ingredients } = useAppSelector((state) => state.ingredients);
   const ingredient = ingredients.find((item) => item._id === id);
 
   if (!ingredient) {

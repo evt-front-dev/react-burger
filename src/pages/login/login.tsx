@@ -1,6 +1,5 @@
 import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import { login, clearAuthError } from "services/auth/authSlice";
 import styles from "common/form.module.scss";
 import {
@@ -8,7 +7,8 @@ import {
   EmailInput,
   PasswordInput,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { AppDispatch, RootState } from "services/store";
+import { RootState } from "store/store";
+import { useAppDispatch, useAppSelector } from "hooks/redux";
 
 interface LoginForm {
   email: string;
@@ -21,11 +21,9 @@ interface AuthState {
 }
 
 const LoginPage: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { loading, error } = useSelector<RootState, AuthState>(
-    (state) => state.auth
-  );
+  const { loading, error } = useAppSelector((state) => state.auth);
   const [form, setForm] = useState<LoginForm>({ email: "", password: "" });
 
   useEffect(() => {
@@ -43,7 +41,9 @@ const LoginPage: React.FC = () => {
     try {
       await dispatch(login(form)).unwrap();
       navigate("/");
-    } catch (err) {}
+    } catch (err: any) {
+      console.error("Login failed:", err);
+    }
   };
 
   return (
