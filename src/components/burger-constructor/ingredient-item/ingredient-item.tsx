@@ -75,6 +75,7 @@ const IngredientItem: React.FC<IngredientItemProps> = ({ item, index }) => {
         opacity: isDragging ? 0.3 : 1,
         cursor: item.type === "bun" ? "default" : "grab",
       }}
+      data-testid="constructor-ingredient"
     >
       {item.type !== "bun" && <DragIcon className="mr-2" type="primary" />}
       <ConstructorElement

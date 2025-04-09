@@ -141,6 +141,7 @@ const BurgerConstructor: React.FC<BurgerConstructorProps> = ({
     <section
       ref={dropTarget}
       className={`pl-4 pr-4 ${styles.burgerConstructor}`}
+      data-testid="burger-constructor"
     >
       <article className={`${styles.constructorElement}`}>
         {bun ? (
@@ -152,7 +153,7 @@ const BurgerConstructor: React.FC<BurgerConstructorProps> = ({
             thumbnail={bun.image}
           />
         ) : (
-          <div className={topBunClass}>
+          <div className={topBunClass} data-testid="bun-top-placeholder">
             <p className="text text_type_main-default text_color_inactive">
               Выберите булку
             </p>
@@ -161,14 +162,17 @@ const BurgerConstructor: React.FC<BurgerConstructorProps> = ({
       </article>
 
       {saucesAndMains.length > 0 ? (
-        <ul className={`${styles.resizingList} custom-scroll`}>
+        <ul
+          className={`${styles.resizingList} custom-scroll`}
+          data-testid="constructor-filling"
+        >
           {saucesAndMains.map((item, index) => (
             <IngredientItem key={item.uniqueId} item={item} index={index} />
           ))}
         </ul>
       ) : (
         <article className={`${styles.constructorElement}`}>
-          <div className={middleClass}>
+          <div className={middleClass} data-testid="filling-placeholder">
             <p className="text text_type_main-default text_color_inactive">
               Добавьте ингредиенты
             </p>
@@ -186,7 +190,7 @@ const BurgerConstructor: React.FC<BurgerConstructorProps> = ({
             thumbnail={bun.image}
           />
         ) : (
-          <div className={bottomBunClass}>
+          <div className={bottomBunClass} data-testid="bun-bottom-placeholder">
             <p className="text text_type_main-default text_color_inactive">
               Выберите булку
             </p>
@@ -195,7 +199,7 @@ const BurgerConstructor: React.FC<BurgerConstructorProps> = ({
       </article>
 
       <footer className={`${styles.total} pt-10`}>
-        <div className={`${styles.price} mr-10`}>
+        <div className={`${styles.price} mr-10`} data-testid="total-price">
           <span className="text text_type_digits-medium">{totalPrice}</span>
           <CurrencyIcon type="primary" />
         </div>
@@ -205,6 +209,7 @@ const BurgerConstructor: React.FC<BurgerConstructorProps> = ({
           size="large"
           onClick={handleOrderClick}
           disabled={!bun || saucesAndMains.length === 0}
+          data-testid="order-button"
         >
           Оформить заказ
         </Button>

@@ -18,7 +18,10 @@ const IngredientList: React.FC<IngredientListProps> = ({
   onIngredientClick,
 }) => {
   return (
-    <div className={`pl-4 pr-4 pb-10 pt-6 ${style.group}`}>
+    <div
+      className={`pl-4 pr-4 pb-10 pt-6 ${style.group}`}
+      data-testid="ingredients-group"
+    >
       {ingredients.map((item) => (
         <IngredientItem
           key={item._id}
@@ -52,6 +55,7 @@ const IngredientItem: React.FC<IngredientItemProps> = ({
       ref={dragRef}
       className={`${style.block} ${isDragging ? style.dragging : ""}`}
       onClick={() => onIngredientClick(item)}
+      data-testid="ingredient-item"
     >
       <img className="mb-1" src={item.image} alt={item.name} />
       <div className={`mb-1 ${style.price}`}>
