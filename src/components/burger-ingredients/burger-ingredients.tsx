@@ -66,7 +66,7 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({
 
   return (
     <>
-      <section className={style.container}>
+      <section className={style.container} data-testid="burger-ingredients">
         <p className="text text_type_main-large pt-10 mb-5">Соберите бургер</p>
         <nav className={`mb-10 ${style.tabs}`}>
           {tabs.map((tab) => (
@@ -83,9 +83,15 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({
         <section
           ref={containerRef}
           className={`ingredient-section custom-scroll ${style.section}`}
+          data-testid="ingredients-container"
         >
           {tabs.map((tab) => (
-            <div key={tab.id} id={tab.id} className={style.category}>
+            <div
+              key={tab.id}
+              id={tab.id}
+              className={style.category}
+              data-testid={`category-${tab.id}`}
+            >
               <p className="text text_type_main-medium">{tab.name}</p>
               <IngredientList
                 ingredients={categoryIngredients[tab.id]}

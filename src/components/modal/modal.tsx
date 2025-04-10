@@ -26,12 +26,16 @@ const Modal: React.FC<ModalProps> = ({ title, onClose, children }) => {
   const modalContent = (
     <>
       <ModalOverlay onClose={onClose} />
-      <div className={style.modal}>
+      <div className={style.modal} data-testid="modal">
         <div className={style.header}>
           <h2 className="text text_type_main-medium" data-testid="modal-title">
             {title}
           </h2>
-          <button style={{ backgroundColor: "#1c1c21" }} onClick={onClose}>
+          <button
+            style={{ backgroundColor: "#1c1c21" }}
+            onClick={onClose}
+            data-testid="modal-close"
+          >
             <CloseIcon type="primary" />
           </button>
         </div>

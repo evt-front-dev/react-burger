@@ -21,7 +21,7 @@ const IngredientDetails: React.FC<IngredientDetailsProps> = ({
   if (!ingredient) return null;
 
   return (
-    <div className={style.details}>
+    <div className={style.details} data-testid="ingredient-details">
       <img
         src={ingredient.image_large}
         alt={ingredient.name}

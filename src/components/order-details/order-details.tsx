@@ -21,7 +21,7 @@ const OrderDetails: React.FC = () => {
 
   if (error) {
     return (
-      <div className={styles.container}>
+      <div className={styles.container} data-testid="order-details">
         <p className="text text_type_main-medium text_color_error">{error}</p>
       </div>
     );
@@ -29,7 +29,7 @@ const OrderDetails: React.FC = () => {
 
   if (loading) {
     return (
-      <div className={styles.container}>
+      <div className={styles.container} data-testid="order-details">
         <p className="text text_type_main-medium">Оформляем заказ...</p>
       </div>
     );
@@ -37,15 +37,18 @@ const OrderDetails: React.FC = () => {
 
   if (!currentOrder || !currentOrder.order) {
     return (
-      <div className={styles.container}>
+      <div className={styles.container} data-testid="order-details">
         <p className="text text_type_main-medium">Номер заказа не найден</p>
       </div>
     );
   }
 
   return (
-    <div className={styles.container}>
-      <p className="text text_type_digits-large mb-8">
+    <div className={styles.container} data-testid="order-details">
+      <p
+        className="text text_type_digits-large mb-8"
+        data-testid="order-number"
+      >
         {currentOrder.order.number}
       </p>
       <p className="text text_type_main-medium">идентификатор заказа</p>
